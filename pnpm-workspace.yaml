@@ -10,3 +10,17 @@ packages:
 allowBuilds:
   electron: true
   esbuild: true
+
+# 供应链：新发布版本的最小冷静期（分钟）。显式声明 pnpm 11 默认值 1440（24h），
+# 让"锁文件必须过 24h 冷静期"成为**仓内契约**而不是机器默认值。
+# 刻意不调成 0 绕开：新包冷静 24h 是防投毒的第一道闸门。
+minimumReleaseAge: 1440
+
+# 供应链：nanoid 钉在 3.3.18（postcss 的传递依赖）。
+# 原因：3.3.19 于 2026-09-10T18:00Z 发布，在 CI 运行时尚未满 24h 冷静期，
+# 被 pnpm 的 minimumReleaseAge 策略拒收 → CI 红（[ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION]）。
+# 本机因全局 pnpm 配置 minimumReleaseAge=0 且使用 npmmirror 镜像（发布元数据时间不同），
+# 本地无法复现该拒绝，因此用 overrides 做**确定性**修复，不依赖本机配置。
+# TODO(3.3.19 满 24h 后)：删除本 overrides 并重新解析，恢复跟随上游 3.x 最新。
+overrides:
+  "nanoid@^3": 3.3.18
