@@ -19,7 +19,8 @@ concurrency:
 
 jobs:
   ci:
-    name: lint → typecheck → test → build → ratchet
+    # 固定短名：分支保护的必需状态检查上下文就是它（改名会使保护失效）
+    name: ci
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

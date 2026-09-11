@@ -1,5 +1,5 @@
 {
-  "_comment": "Electron 主进程编译为 CJS 并输出 .cjs（package.json 为 type:module）。ESM 主进程入口需 electron 37+，M1 骨架不赌。",
+  "_comment": "Electron 主进程编译为 CJS。输入必须是 .cts：tsc 只把 .cts 输出为 .cjs（package.json 为 type:module，.js 会被 Electron 当 ESM 加载而失败）。",
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "src",
@@ -9,7 +9,9 @@
     "lib": ["ES2023"],
     "types": ["node"],
     "verbatimModuleSyntax": false,
+    "declaration": false,
+    "declarationMap": false,
     "composite": false
   },
-  "include": ["src/main/**/*.ts", "src/main/**/*.cts"]
+  "include": ["src/main/**/*.cts"]
 }

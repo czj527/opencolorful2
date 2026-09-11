@@ -4,9 +4,13 @@
  * 只做两件事：开一个窗口加载**构建产物**、把构建期注入的版本戳经 IPC 交给渲染层。
  * 聊天主循环 / 工具 / 记忆 / SQLite / P0 治理由后续任务落地，**本文件不实现业务逻辑**。
  *
+ * ⚠️ 文件必须是 `.cts`（不是 `.ts`）：tsc 只把 `.cts` 输出为 `.cjs`；而本包
+ * `package.json` 是 `type: module`，若编译出 `.js` 会被 Electron 当 ESM 加载
+ * （Electron 33 不支持 ESM 主进程入口）→ 启动即失败。产物路径契约见下方常量。
+ *
  * 产物路径契约（勿改，t7 会按此断言）：
- *   apps/desktop/dist/main/main.cjs
- *   apps/desktop/dist/main/preload.cjs
+ *   apps/desktop/dist/main/main.cjs      ← 本文件
+ *   apps/desktop/dist/main/preload.cjs   ← src/main/preload.cts
  *   apps/desktop/dist/renderer/index.html
  *   apps/desktop/dist/build-info.json
  *
@@ -33,7 +37,7 @@ interface BuildInfo {
   pnpm: string | null;
 }
 
-/** 交给渲染层的载荷：可用时给出四方一致中的"应用内显示"两个来源。 */
+/** 交给渲染层的载荷：可用时给出"应用内显示"的两个来源。 */
 type BuildInfoPayload =
   | { available: true; buildInfo: BuildInfo; appVersion: string; versionConsistent: boolean }
   | { available: false; reason: string };
