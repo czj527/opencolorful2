@@ -1,0 +1,15 @@
+# 统一换行与文本处理（CI 在 Linux runner 上按 LF 校验，避免 CRLF 噪声）
+* text=auto eol=lf
+
+# 二进制产物不参与文本转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.exe binary
+*.sqlite binary
+*.woff binary
+*.woff2 binary
+
+# lockfile 视作文本（便于 review diff）
+pnpm-lock.yaml text eol=lf

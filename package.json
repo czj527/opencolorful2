@@ -1,0 +1,31 @@
+{
+  "name": "agentplant",
+  "version": "0.0.0",
+  "private": true,
+  "description": "单人自托管的私人 AI 助理（本地优先/桌面优先/TS 同仓）",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.8.0",
+  "scripts": {
+    "dev": "pnpm -r --if-present run dev",
+    "build": "pnpm --filter @agentplant/gateway-protocol run build && pnpm --filter @agentplant/plugin-sdk run build && pnpm --filter @agentplant/state run build && pnpm --filter @agentplant/agent-core run build && pnpm --filter @agentplant/desktop run build",
+    "lint": "eslint .",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "test": "vitest run --passWithNoTests",
+    "check:ratchet": "node scripts/check-ratchet.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "version:sync": "node scripts/sync-version.mjs",
+    "version:check": "node scripts/sync-version.mjs --check"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.15.0",
+    "@types/node": "22.10.2",
+    "eslint": "9.15.0",
+    "typescript": "5.7.2",
+    "typescript-eslint": "8.16.0",
+    "vitest": "2.1.8"
+  }
+}

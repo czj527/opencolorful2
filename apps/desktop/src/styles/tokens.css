@@ -1,0 +1,60 @@
+/*
+ * AgentPlant token 层占位文件。
+ *
+ * 落地路径约定：`apps/desktop/src/styles/tokens.css`
+ * （见 docs/design/tokens.md §7.2、docs/design/ia-and-interaction.md 文首）。
+ *
+ * ⚠️ 当前只有骨架期的最小变量，**不是** token 全量落地：完整 token 表由 t5 规范
+ * （docs/design/tokens.md 附录 A）驱动落地，并按 t5 要求配 `scripts/check-tokens.mjs`
+ * 校验对比度与引用完整性后接入 `pnpm test` 门禁。禁止手改 tokens.md 原文。
+ */
+
+:root {
+  --ap-bg-surface: #ffffff;
+  --ap-bg-canvas: #f7f7f8;
+  --ap-text-primary: #1a1a1c;
+  --ap-text-secondary: #5c5c66;
+  --ap-border-subtle: #e4e4e8;
+  --ap-fs-h1: 24px;
+  --ap-fs-body: 14px;
+  --ap-size-titlebar: 44px;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--ap-bg-canvas);
+  color: var(--ap-text-primary);
+  font-family:
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: var(--ap-fs-body);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 24px;
+  text-align: center;
+}
+
+#app h1 {
+  margin: 0;
+  font-size: var(--ap-fs-h1);
+}
+
+#app p {
+  margin: 0;
+  color: var(--ap-text-secondary);
+  max-width: 46ch;
+}

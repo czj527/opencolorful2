@@ -1,0 +1,15 @@
+{
+  "_comment": "Electron 主进程编译为 CJS 并输出 .cjs（package.json 为 type:module）。ESM 主进程入口需 electron 37+，M1 骨架不赌。",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "verbatimModuleSyntax": false,
+    "composite": false
+  },
+  "include": ["src/main/**/*.ts", "src/main/**/*.cts"]
+}

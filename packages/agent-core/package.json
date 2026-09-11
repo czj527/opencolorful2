@@ -1,0 +1,25 @@
+{
+  "name": "@agentplant/agent-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "M1: agent 主循环 + 最小工具集 + 记忆的纯净内核（禁 import apps/*）",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@agentplant/state": "workspace:*"
+  }
+}

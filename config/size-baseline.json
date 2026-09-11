@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "note": "工程棘轮基线（t3 §5）：LOC 与 lint suppression 只减不增。有意上调需在 PR 中单独说明，并用 `node scripts/check-ratchet.mjs --update` 更新本文件。",
+  "metric": {
+    "loc": "去空行、去纯注释行后的行数",
+    "lintSuppressions": "`eslint-disable` 出现次数",
+    "extensions": [
+      ".cjs",
+      ".css",
+      ".cts",
+      ".html",
+      ".js",
+      ".mjs",
+      ".mts",
+      ".ts",
+      ".tsx"
+    ]
+  },
+  "entries": {
+    "apps/desktop": {
+      "loc": 305,
+      "lintSuppressions": 0
+    },
+    "packages/agent-core": {
+      "loc": 78,
+      "lintSuppressions": 0
+    },
+    "packages/gateway-protocol": {
+      "loc": 33,
+      "lintSuppressions": 0
+    },
+    "packages/plugin-sdk": {
+      "loc": 19,
+      "lintSuppressions": 0
+    },
+    "packages/state": {
+      "loc": 42,
+      "lintSuppressions": 0
+    },
+    "scripts": {
+      "loc": 804,
+      "lintSuppressions": 3
+    }
+  }
+}

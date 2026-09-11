@@ -1,0 +1,19 @@
+{
+  "name": "@agentplant/desktop",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "M1 入口：Electron 桌面壳 + 渲染层（桌面优先）",
+  "main": "dist/main/main.cjs",
+  "scripts": {
+    "build": "tsc -p tsconfig.main.json && tsc -p tsconfig.renderer.json && node scripts/copy-assets.mjs && node scripts/gen-build-info.mjs",
+    "typecheck": "tsc -p tsconfig.main.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
+    "dev": "electron .",
+    "start": "electron .",
+    "package": "electron-builder --dir",
+    "package:release": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "33.2.1"
+  }
+}

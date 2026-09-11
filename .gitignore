@@ -1,0 +1,36 @@
+# 依赖与构建产物
+node_modules/
+dist/
+out/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# 仅本地参考，不进仓（t3 §1 / §6-1）：
+#   references/ 为本机对标源码（openclaw/hermes/openhanako/...）
+#   .agent-teams/ 为 agent 编排运行时状态
+references/
+.agent-teams/
+
+# 运行态与密钥：永不进仓（t3 §1 约束、t4 §6）
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db
+.env
+.env.*
+!.env.example
+
+# 发布产物与证据（t7：证据落 dist/，不进仓）
+release/
+
+# 本地临时草稿与验证日志（不进仓、不参与门禁）
+.tmp-*/
+*.log
+
+# 编辑器与系统
+.vscode/*
+!.vscode/extensions.json
+.idea/
+Thumbs.db
+Desktop.ini

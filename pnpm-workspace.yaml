@@ -1,0 +1,12 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+
+# pnpm 11 默认拦截依赖的安装脚本（未决策的包会让 install 非 0 退出）。
+# 这里显式放行构建期确实需要执行脚本的两个包：
+#   electron —— 安装时下载对应平台二进制（缺失则 `electron .` 无法启动）
+#   esbuild  —— vitest 的传递依赖，安装脚本负责落平台二进制
+# 收紧纪律：新增白名单项需在 PR 中说明理由（属于供应链面）。
+allowBuilds:
+  electron: true
+  esbuild: true

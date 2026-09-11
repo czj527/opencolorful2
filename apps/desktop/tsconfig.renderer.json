@@ -1,0 +1,16 @@
+{
+  "_comment": "渲染层为浏览器目标：DOM lib + bundler 解析（t5 视觉规范落地于此，见 docs/design/tokens.md §7.2）。",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "declaration": false,
+    "declarationMap": false,
+    "composite": false
+  },
+  "include": ["src/renderer/**/*.ts"]
+}

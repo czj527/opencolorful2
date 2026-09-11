@@ -1,0 +1,22 @@
+{
+  "name": "@agentplant/state",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "M1: SQLite 单库状态内核（任务/会话/记忆同库，WAL）",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

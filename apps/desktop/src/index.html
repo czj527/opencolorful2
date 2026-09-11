@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <!--
+      严格 CSP：不加载任何远端资源（本地优先）。含 file: 是因为本页经 loadFile 以
+      file:// 加载，Chromium 对 file 文档的 `'self'` 匹配不可靠；收紧时机见 README
+      （改为自定义协议或 packaged app 的 app:// 后即可去掉 file:）。
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self' file:; style-src 'self' file:; img-src 'self' file: data:; connect-src 'none'; object-src 'none'; base-uri 'none'"
+    />
+    <title>AgentPlant</title>
+    <link rel="stylesheet" href="./styles/tokens.css" />
+  </head>
+  <body>
+    <main id="app" class="ap-boot">正在加载…</main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
