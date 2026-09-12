@@ -1,0 +1,17 @@
+{
+  "name": "@agentplant/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "M1: 聊天渲染层唯一真相源（三视图 + 检查器 + 设置；零外部依赖，产物由 apps/desktop 复用）",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json"
+  },
+  "dependencies": {
+    "@agentplant/protocol": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.7.2"
+  }
+}

@@ -1,21 +1,34 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="light">
   <head>
     <meta charset="utf-8" />
+    <meta name="color-scheme" content="light dark" />
     <!--
-      严格 CSP：不加载任何远端资源（本地优先）。含 file: 是因为本页经 loadFile 以
-      file:// 加载，Chromium 对 file 文档的 `'self'` 匹配不可靠；收紧时机见 README
-      （改为自定义协议或 packaged app 的 app:// 后即可去掉 file:）。
+      Electron 壳的 index.html —— **结构以 apps/web 为准**（渲染层唯一真相源，t21 起）：
+      本文件与 `apps/web/src/index.html` 除 CSP 与 <title> 外必须逐字一致；
+      `scripts/copy-assets.mjs` 会逐片段校验，漂移即构建失败。
+
+      CSP 说明（本地优先，t2）：
+        - `connect-src http://127.0.0.1:43121 ws://127.0.0.1:43121`：渲染层唯一网络出口是本地
+          server（apps/server 默认 PORT=43121，与 DSH 的 43120 错开一位）；`ws://` 为二期预留
+          （M1 用 fetch + ReadableStream 读 SSE，不建 WebSocket）。
+        - `script-src 'self' file:`：本页经 `loadFile` 以 file:// 加载，Chromium 对 file 文档的
+          `'self'` 匹配不可靠，故显式加 `file:`；改自定义协议或 packaged app 的 app:// 后即可去掉。
+        - `style-src` 额外允许 `'unsafe-inline'`：运行时写 CSS 自定义属性（如 ambient-hour-tint）需要。
+        - 其余保持最严：无远程脚本/样式/字体/frame，`object-src 'none'`，`base-uri 'none'`，
+          `form-action 'none'`。
     -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'self' file:; style-src 'self' file:; img-src 'self' file: data:; connect-src 'none'; object-src 'none'; base-uri 'none'"
+      content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; font-src 'self' file:; connect-src http://127.0.0.1:43121 ws://127.0.0.1:43121; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <title>AgentPlant</title>
     <link rel="stylesheet" href="./styles/tokens.css" />
+    <link rel="stylesheet" href="./styles/app.css" />
+    <script type="module" src="./styles/theme-init.js"></script>
   </head>
   <body>
-    <main id="app" class="ap-boot">正在加载…</main>
+    <div id="app" class="ap-app" aria-busy="true"></div>
     <script type="module" src="./main.js"></script>
   </body>
 </html>

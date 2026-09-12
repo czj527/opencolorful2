@@ -58,6 +58,7 @@ pnpm verify:release dist/release/<version>   # 发布产物校验（t7 §1.1，�
 
 ## 文档地图
 
+`design.md`（根基线：§2 架构 + §3 视觉，真相源见 `docs/design/`）→
 `docs/decisions/t1`（对标）→ `t2`（定位/MVP）→ `t3`（仓库与 CI）→ `t4`（后端架构）→
 `t5`（前端视觉）→ `t7`（验收门禁）；`docs/design/` 为 IA 与 tokens 规范。
 `references/`（对标源码）与 `.agent-teams/`（编排状态）**仅本地**，不进仓。

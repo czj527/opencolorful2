@@ -1,0 +1,1242 @@
+/*
+ * apps/web 组件样式（唯一一份）。
+ *
+ * 铁律（tokens.md §0.1，CI 由 `scripts/check-tokens.mjs` 静态拦截）：
+ *   - **零裸 hex**：颜色一律 `var(--ap-*)`（L2 语义层）；
+ *   - **零裸 ms**：动效时长一律 `var(--ap-duration-*)`；
+ *   - **零裸 px 字号**：字号一律 `var(--ap-fs-*)` / `var(--ap-lh-*)`；
+ *   - 圆角/间距/尺寸/层级一律走 `--ap-radius-*` / `--ap-space-*` / `--ap-size-*` / `--ap-z-*`。
+ * 裸 px 只允许出现在"非字号、非圆角、非间距阶梯"的微观几何（如 1px 描边由 `--ap-border-w` 承担，
+ * 故这里连 1px 也不该出现；见下）。
+ */
+
+/* ── 外壳（IA §1.3 布局网格） ─────────────────────────────────────────── */
+
+.ap-app {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  color: var(--ap-text-primary);
+  background: var(--ap-surface-0);
+  font-family: var(--ap-font-sans);
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+  font-synthesis: none;
+  letter-spacing: var(--ap-tracking-normal);
+}
+
+.ap-shell {
+  display: flex;
+  flex: 1;
+  min-block-size: 0;
+}
+
+.ap-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 var(--ap-size-sidebar);
+  inline-size: var(--ap-size-sidebar);
+  background: var(--ap-surface-sunken);
+  border-inline-end: var(--ap-border-w) solid var(--ap-border-subtle);
+  gap: var(--ap-space-8);
+  padding: var(--ap-space-8) var(--ap-space-8);
+  overflow: hidden;
+}
+
+.ap-sidebar-collapsed {
+  flex-basis: var(--ap-space-64);
+  inline-size: var(--ap-space-64);
+}
+
+.ap-sidebar-head,
+.ap-sidebar-foot {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-6);
+  block-size: var(--ap-size-titlebar);
+  padding: 0 var(--ap-space-4);
+}
+
+.ap-brand {
+  font-size: var(--ap-fs-h2);
+  line-height: var(--ap-lh-h2);
+  font-weight: var(--ap-fw-semibold);
+  margin-inline-end: auto;
+}
+
+.ap-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-4);
+}
+
+.ap-nav-item,
+.ap-session-item,
+.ap-task-main,
+.ap-memory-main {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-12);
+  inline-size: 100%;
+  min-block-size: var(--ap-size-toolbar);
+  padding: 0 var(--ap-space-12);
+  margin: 0;
+  border: none;
+  border-radius: var(--ap-radius-control);
+  background: transparent;
+  color: var(--ap-text-primary);
+  font-family: inherit;
+  font-size: var(--ap-fs-ui);
+  line-height: var(--ap-lh-ui);
+  font-weight: var(--ap-fw-medium);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--ap-duration-instant) var(--ap-ease-standard);
+}
+
+.ap-nav-item:hover,
+.ap-session-item:hover,
+.ap-task-main:hover,
+.ap-memory-main:hover {
+  background: var(--ap-surface-row-hover);
+}
+
+.ap-nav-item-active,
+.ap-row-selected {
+  background: var(--ap-surface-row-selected);
+  box-shadow: inset var(--ap-size-indicator-rail) 0 0 var(--ap-border-accent);
+}
+
+.ap-nav-item-primary {
+  color: var(--ap-accent-text);
+}
+
+.ap-nav-item-quiet {
+  color: var(--ap-text-secondary);
+}
+
+.ap-count,
+.ap-count-badge {
+  margin-inline-start: auto;
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-micro);
+  line-height: var(--ap-lh-micro);
+}
+
+.ap-count-badge {
+  margin-inline-start: var(--ap-space-8);
+  padding: var(--ap-space-2) var(--ap-space-6);
+  border-radius: var(--ap-radius-xs);
+  background: var(--ap-accent-subtle);
+  color: var(--ap-text-secondary);
+}
+
+.ap-icon {
+  inline-size: var(--ap-space-20);
+  text-align: center;
+  color: var(--ap-text-tertiary);
+}
+
+.ap-icon-btn,
+.ap-text-btn,
+.ap-btn,
+.ap-version-chip,
+.ap-chip,
+.ap-seg-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ap-space-6);
+  min-block-size: var(--ap-size-control);
+  padding: 0 var(--ap-space-8);
+  border: var(--ap-border-w) solid transparent;
+  border-radius: var(--ap-radius-control);
+  background: transparent;
+  color: var(--ap-text-primary);
+  font-family: inherit;
+  font-size: var(--ap-fs-ui);
+  line-height: var(--ap-lh-ui);
+  font-weight: var(--ap-fw-medium);
+  cursor: pointer;
+  transition: background-color var(--ap-duration-fast) var(--ap-ease-standard);
+}
+
+.ap-icon-btn {
+  min-inline-size: var(--ap-size-control);
+  padding: 0;
+  color: var(--ap-text-tertiary);
+}
+
+.ap-icon-btn:hover,
+.ap-text-btn:hover,
+.ap-seg-item:hover,
+.ap-version-chip:hover {
+  background: var(--ap-surface-row-hover);
+}
+
+.ap-btn-primary {
+  background: var(--ap-accent);
+  color: var(--ap-accent-on);
+  padding: 0 var(--ap-space-16);
+}
+
+.ap-btn-primary:hover {
+  background: var(--ap-accent-hover);
+}
+
+.ap-btn-primary:active {
+  background: var(--ap-accent-active);
+}
+
+.ap-btn-danger {
+  background: var(--ap-danger);
+  color: var(--ap-danger-on);
+  padding: 0 var(--ap-space-16);
+}
+
+.ap-btn-danger:hover {
+  background: var(--ap-danger-hover);
+}
+
+.ap-btn-secondary {
+  border-color: var(--ap-border-default);
+}
+
+.ap-btn-stop {
+  border-color: var(--ap-border-danger);
+  color: var(--ap-danger-text);
+}
+
+.ap-btn-stop:hover {
+  background: var(--ap-danger-subtle);
+}
+
+.ap-chip {
+  border-radius: var(--ap-radius-pill);
+  border-color: var(--ap-border-default);
+  background: var(--ap-surface-2);
+}
+
+.ap-version-chip {
+  min-block-size: var(--ap-size-control-sm);
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-micro);
+  line-height: var(--ap-lh-micro);
+}
+
+.ap-spacer {
+  flex: 1;
+}
+
+/* 焦点可见：外环 + 浅底光晕成对（tokens.md §5.5，方案B） */
+:where(button, input, textarea, [tabindex]):focus-visible {
+  outline: var(--ap-focus-ring-width) solid var(--ap-border-focus);
+  outline-offset: var(--ap-focus-ring-offset);
+  box-shadow: var(--ap-shadow-glow);
+}
+
+/* ── 会话列表 ─────────────────────────────────────────────────────────── */
+
+.ap-session-list {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-4);
+}
+
+.ap-group-title {
+  padding: var(--ap-space-8) var(--ap-space-12) var(--ap-space-2);
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+}
+
+.ap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-2);
+}
+
+.ap-session-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ap-space-2);
+  min-block-size: var(--ap-space-48);
+  padding: var(--ap-space-6) var(--ap-space-12);
+}
+
+.ap-session-title {
+  inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ap-session-meta {
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+  font-weight: var(--ap-fw-regular);
+}
+
+/* ── 主列 ─────────────────────────────────────────────────────────────── */
+
+.ap-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: 0;
+  position: relative;
+  background: var(--ap-surface-0);
+}
+
+.ap-chat-head,
+.ap-view-head {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-12);
+  block-size: var(--ap-size-titlebar);
+  padding: 0 var(--ap-space-40);
+  border-block-end: var(--ap-border-w) solid var(--ap-border-subtle);
+}
+
+.ap-chat-title,
+.ap-view-title {
+  margin: 0;
+  font-size: var(--ap-fs-h2);
+  line-height: var(--ap-lh-h2);
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-stream {
+  flex: 1;
+  min-block-size: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding: var(--ap-space-24) var(--ap-space-40) var(--ap-space-32);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-24);
+}
+
+.ap-date-divider {
+  text-align: center;
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+  padding-block: var(--ap-space-16);
+}
+
+.ap-turn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-12);
+  max-inline-size: var(--ap-size-chat-max);
+  inline-size: 100%;
+  margin-inline: auto;
+}
+
+.ap-turn-user {
+  align-items: flex-end;
+}
+
+.ap-bubble {
+  max-inline-size: calc(var(--ap-size-chat-max) - 3 * var(--ap-space-40));
+  padding: var(--ap-space-12) var(--ap-space-16);
+  border-radius: var(--ap-radius-bubble);
+  border-end-end-radius: var(--ap-radius-control);
+  background: var(--ap-surface-bubble-user);
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ap-bubble-pending {
+  opacity: var(--ap-opacity-muted);
+}
+
+.ap-meta {
+  display: flex;
+  gap: var(--ap-space-8);
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+  opacity: var(--ap-opacity-hidden);
+  transition: opacity var(--ap-duration-instant) var(--ap-ease-standard);
+}
+
+.ap-turn:hover .ap-meta,
+.ap-turn:focus-within .ap-meta {
+  opacity: 1;
+}
+
+.ap-text {
+  font-size: var(--ap-fs-body-lg);
+  line-height: var(--ap-lh-body-lg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ap-caret {
+  display: inline-block;
+  inline-size: var(--ap-motion-caret-width);
+  block-size: var(--ap-space-20);
+  margin-inline-start: var(--ap-space-2);
+  background: var(--ap-presence-streaming);
+  vertical-align: text-bottom;
+}
+
+.ap-thinking {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-4);
+  min-block-size: var(--ap-lh-body-lg);
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-thinking-text:not(:empty) {
+  margin-inline-start: var(--ap-space-8);
+}
+
+.ap-dot {
+  display: inline-block;
+  border-radius: var(--ap-radius-full);
+  background: var(--ap-presence-idle);
+}
+
+.ap-dot-sm {
+  inline-size: var(--ap-presence-dot-size);
+  block-size: var(--ap-presence-dot-size);
+}
+
+.ap-dot-lg {
+  inline-size: var(--ap-presence-dot-size-lg);
+  block-size: var(--ap-presence-dot-size-lg);
+}
+
+.ap-presence-idle {
+  background: var(--ap-presence-idle);
+}
+
+.ap-presence-thinking {
+  background: var(--ap-presence-thinking);
+}
+
+.ap-presence-streaming {
+  background: var(--ap-presence-streaming);
+}
+
+.ap-presence-acting {
+  background: var(--ap-presence-acting);
+}
+
+.ap-presence-awaiting {
+  background: var(--ap-presence-awaiting);
+  box-shadow: 0 0 0 var(--ap-presence-ring-width) var(--ap-presence-thinking-subtle);
+}
+
+.ap-presence-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ap-space-6);
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+}
+
+.ap-tone-neutral {
+  color: var(--ap-text-tertiary);
+}
+
+.ap-tone-acting {
+  color: var(--ap-presence-acting-text);
+}
+
+.ap-tone-success {
+  color: var(--ap-success-text);
+}
+
+.ap-tone-warning {
+  color: var(--ap-warning-text);
+}
+
+.ap-tone-danger {
+  color: var(--ap-danger-text);
+}
+
+.ap-tone-info {
+  color: var(--ap-info-text);
+}
+
+.ap-tone-accent {
+  color: var(--ap-accent-text);
+}
+
+/* ── 交付标签 / 计划标签（IA §6.3） ───────────────────────────────────── */
+
+.ap-delivery,
+.ap-plan-note,
+.ap-stopped {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ap-space-6);
+  align-self: flex-start;
+  padding: var(--ap-space-2) var(--ap-space-6);
+  border-radius: var(--ap-radius-xs);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-delivery.ap-tone-warning {
+  background: var(--ap-warning-subtle);
+}
+
+.ap-delivery.ap-tone-success {
+  background: var(--ap-success-subtle);
+}
+
+.ap-delivery.ap-tone-unknown {
+  background: var(--ap-surface-inset);
+  color: var(--ap-text-tertiary);
+}
+
+.ap-delivery-evidence {
+  color: var(--ap-accent-text);
+}
+
+.ap-stopped {
+  color: var(--ap-text-tertiary);
+}
+
+/* ── 工具卡（IA §4.1 四层） ───────────────────────────────────────────── */
+
+.ap-tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-8);
+  max-inline-size: calc(var(--ap-size-chat-max) - var(--ap-space-40));
+  padding: var(--ap-space-12) var(--ap-space-16);
+  background: var(--ap-surface-1);
+  border: var(--ap-border-w) solid var(--ap-border-subtle);
+  border-inline-start: var(--ap-size-indicator-rail) solid var(--ap-border-subtle);
+  border-radius: var(--ap-radius-tool-card);
+}
+
+.ap-tool-tone-acting {
+  border-inline-start-color: var(--ap-presence-acting);
+}
+
+.ap-tool-tone-success {
+  border-inline-start-color: var(--ap-success);
+}
+
+.ap-tool-tone-danger {
+  border-inline-start-color: var(--ap-danger);
+}
+
+.ap-tool-head {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-6);
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+}
+
+.ap-tool-name {
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-tool-status {
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+}
+
+.ap-danger-badge {
+  padding: var(--ap-space-2) var(--ap-space-6);
+  border-radius: var(--ap-radius-xs);
+  border: var(--ap-border-w) solid currentColor;
+  font-size: var(--ap-fs-micro);
+  line-height: var(--ap-lh-micro);
+  font-weight: var(--ap-fw-medium);
+}
+
+.ap-tool-args,
+.ap-confirm-command {
+  font-family: var(--ap-font-mono);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+  color: var(--ap-text-secondary);
+  background: var(--ap-surface-inset);
+  border-radius: var(--ap-radius-inset, var(--ap-radius-sm));
+  padding: var(--ap-space-6) var(--ap-space-8);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.ap-tool-result {
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+  color: var(--ap-text-secondary);
+  white-space: pre-wrap;
+}
+
+.ap-tool-skeleton {
+  block-size: var(--ap-space-16);
+  border-radius: var(--ap-radius-sm);
+  background: var(--ap-surface-inset);
+}
+
+.ap-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-8);
+  min-block-size: var(--ap-space-64);
+  padding-block-start: var(--ap-space-8);
+  border-block-start: var(--ap-border-w) solid var(--ap-border-subtle);
+}
+
+.ap-confirm-title {
+  color: var(--ap-danger-text);
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-confirm-gap {
+  color: var(--ap-warning-text);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+  background: var(--ap-warning-subtle);
+  border-radius: var(--ap-radius-inset, var(--ap-radius-sm));
+  padding: var(--ap-space-6) var(--ap-space-8);
+}
+
+.ap-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ap-space-8);
+}
+
+.ap-confirm-record {
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+  color: var(--ap-text-tertiary);
+}
+
+/* ── 行内提示 / 错误条（IA §3.8：不用 toast） ─────────────────────────── */
+
+.ap-inline-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ap-space-8);
+  padding: var(--ap-space-12) var(--ap-space-16);
+  border-radius: var(--ap-radius-card);
+  border: var(--ap-border-w) solid var(--ap-border-default);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-inline-notice.ap-tone-danger {
+  background: var(--ap-danger-subtle);
+  border-color: var(--ap-border-danger);
+  color: var(--ap-danger-text);
+}
+
+.ap-inline-notice.ap-tone-warning {
+  background: var(--ap-warning-subtle);
+  border-color: var(--ap-border-warning);
+  color: var(--ap-warning-text);
+}
+
+.ap-inline-notice.ap-tone-success {
+  background: var(--ap-success-subtle);
+  border-color: var(--ap-border-success);
+  color: var(--ap-success-text);
+}
+
+.ap-inline-notice.ap-tone-info {
+  background: var(--ap-info-subtle);
+  border-color: var(--ap-border-info);
+  color: var(--ap-info-text);
+}
+
+.ap-notice-title {
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-notice-detail {
+  color: var(--ap-text-secondary);
+}
+
+.ap-banner {
+  block-size: var(--ap-size-control);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ap-space-16);
+  font-size: var(--ap-fs-ui);
+  line-height: var(--ap-lh-ui);
+  z-index: var(--ap-z-sticky);
+}
+
+.ap-banner.ap-tone-warning {
+  background: var(--ap-warning-subtle);
+  color: var(--ap-warning-text);
+}
+
+.ap-banner.ap-tone-danger {
+  background: var(--ap-danger-subtle);
+  color: var(--ap-danger-text);
+}
+
+/* ── 空态 / 引导（IA §3.5） ───────────────────────────────────────────── */
+
+.ap-empty-card,
+.ap-guide {
+  margin: auto;
+  max-inline-size: var(--ap-size-chat-max);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ap-space-16);
+  padding: var(--ap-space-48);
+  text-align: center;
+  border-radius: var(--ap-radius-2xl);
+}
+
+.ap-guide {
+  padding-block-start: var(--ap-space-80);
+}
+
+.ap-guide-title,
+.ap-empty-title {
+  margin: 0;
+  font-size: var(--ap-fs-h2);
+  line-height: var(--ap-lh-h2);
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-guide-body,
+.ap-empty-body {
+  margin: 0;
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+}
+
+.ap-guide-chips {
+  display: flex;
+  gap: var(--ap-space-8);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ap-empty-hint {
+  color: var(--ap-text-muted);
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+  padding: var(--ap-space-24) var(--ap-space-40);
+}
+
+/* ── 输入区（IA §3.7） ────────────────────────────────────────────────── */
+
+.ap-composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-8);
+  inline-size: calc(var(--ap-size-composer-max) - 2 * var(--ap-space-40));
+  margin: 0 auto var(--ap-space-16);
+  padding: var(--ap-space-12) var(--ap-space-16) var(--ap-space-8);
+  background: var(--ap-surface-2);
+  border: var(--ap-border-w) solid var(--ap-border-default);
+  border-radius: var(--ap-radius-bubble);
+  box-shadow: var(--ap-shadow-xs);
+}
+
+.ap-composer:focus-within {
+  border-color: var(--ap-border-focus);
+  box-shadow: var(--ap-shadow-glow);
+}
+
+.ap-input {
+  inline-size: 100%;
+  min-block-size: var(--ap-space-80);
+  max-block-size: calc(var(--ap-space-48) * 5);
+  padding: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: var(--ap-text-primary);
+  font-family: var(--ap-font-sans);
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+}
+
+.ap-input::placeholder {
+  color: var(--ap-text-muted);
+}
+
+.ap-input-inline {
+  min-block-size: var(--ap-size-control);
+  padding: 0 var(--ap-space-8);
+  border: var(--ap-border-w) solid var(--ap-border-default);
+  border-radius: var(--ap-radius-control);
+  background: var(--ap-surface-1);
+  font-size: var(--ap-fs-ui);
+  line-height: var(--ap-lh-ui);
+}
+
+.ap-composer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-4);
+  min-block-size: var(--ap-size-toolbar);
+}
+
+.ap-composer-hint,
+.ap-keyhint {
+  min-block-size: var(--ap-space-20);
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-keyhint {
+  padding: 0 var(--ap-space-16) var(--ap-space-4);
+  text-align: center;
+}
+
+.ap-queue {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-8);
+  color: var(--ap-warning-text);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-attach-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-8);
+  padding: var(--ap-space-12);
+  border: var(--ap-border-w) solid var(--ap-border-subtle);
+  border-radius: var(--ap-radius-card);
+  background: var(--ap-surface-1);
+}
+
+.ap-attach-panel[hidden] {
+  display: none;
+}
+
+.ap-attach-title {
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-attach-body {
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-jump-latest {
+  position: absolute;
+  inset-block-end: var(--ap-space-24);
+  inset-inline-end: var(--ap-space-40);
+  z-index: var(--ap-z-raised);
+  block-size: var(--ap-size-toolbar);
+  border-radius: var(--ap-radius-pill);
+  border: var(--ap-border-w) solid var(--ap-border-default);
+  background: var(--ap-surface-2);
+  box-shadow: var(--ap-shadow-md);
+}
+
+/* ── 记忆 / 任务视图 ──────────────────────────────────────────────────── */
+
+.ap-filter-row,
+.ap-seg {
+  display: flex;
+  gap: var(--ap-space-4);
+  padding: var(--ap-space-8) var(--ap-space-40);
+}
+
+.ap-seg-item {
+  min-block-size: var(--ap-size-control);
+  min-inline-size: var(--ap-size-control);
+  border-radius: var(--ap-radius-control);
+  color: var(--ap-text-secondary);
+}
+
+.ap-seg-item-active {
+  background: var(--ap-accent-subtle);
+  color: var(--ap-text-primary);
+}
+
+.ap-search {
+  inline-size: var(--ap-size-detail);
+  min-block-size: var(--ap-size-control);
+  padding: 0 var(--ap-space-8);
+  border: var(--ap-border-w) solid var(--ap-border-default);
+  border-radius: var(--ap-radius-control);
+  background: var(--ap-surface-1);
+  color: var(--ap-text-primary);
+  font-family: inherit;
+  font-size: var(--ap-fs-ui);
+  line-height: var(--ap-lh-ui);
+}
+
+.ap-search::placeholder {
+  color: var(--ap-text-muted);
+}
+
+.ap-memory-list,
+.ap-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--ap-space-40) var(--ap-space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-8);
+  overflow-y: auto;
+  flex: 1;
+  min-block-size: 0;
+}
+
+.ap-memory-item,
+.ap-task-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-8);
+  background: var(--ap-surface-1);
+  border: var(--ap-border-w) solid var(--ap-border-subtle);
+  border-radius: var(--ap-radius-card);
+  padding: var(--ap-space-8) var(--ap-space-12);
+}
+
+.ap-memory-confirm {
+  color: var(--ap-danger-text);
+  background: var(--ap-danger-subtle);
+  border-color: var(--ap-border-danger);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-memory-main,
+.ap-task-main {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ap-space-4);
+  background: transparent;
+  min-block-size: var(--ap-space-48);
+}
+
+.ap-memory-row1,
+.ap-memory-row2 {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-8);
+  inline-size: 100%;
+}
+
+.ap-memory-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.ap-kind-glyph {
+  color: var(--ap-accent-text);
+}
+
+.ap-kind-badge {
+  padding: 0 var(--ap-space-6);
+  border-radius: var(--ap-radius-xs);
+  background: var(--ap-accent-subtle);
+  color: var(--ap-text-secondary);
+  font-size: var(--ap-fs-micro);
+  line-height: var(--ap-lh-micro);
+}
+
+.ap-memory-row2 {
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+  font-weight: var(--ap-fw-regular);
+}
+
+.ap-memory-actions {
+  display: flex;
+  gap: var(--ap-space-4);
+}
+
+.ap-undo-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-8);
+  margin: 0 var(--ap-space-40) var(--ap-space-8);
+  padding: var(--ap-space-6) var(--ap-space-12);
+  border-radius: var(--ap-radius-control);
+  background: var(--ap-info-subtle);
+  color: var(--ap-info-text);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-task-title {
+  font-size: var(--ap-fs-body);
+  line-height: var(--ap-lh-body);
+  font-weight: var(--ap-fw-medium);
+}
+
+.ap-task-meta {
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+  font-weight: var(--ap-fw-regular);
+}
+
+.ap-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ap-space-4);
+  padding: var(--ap-space-2) var(--ap-space-6);
+  border-radius: var(--ap-radius-xs);
+  background: var(--ap-surface-inset);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+}
+
+.ap-lock {
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+}
+
+.ap-skeleton-row,
+.ap-skeleton-block {
+  block-size: var(--ap-space-16);
+  border-radius: var(--ap-radius-sm);
+  background: var(--ap-surface-inset);
+}
+
+.ap-skeleton-block {
+  block-size: var(--ap-space-24);
+}
+
+/* ── 检查器（320px，IA §1.3 / §1.4） ──────────────────────────────────── */
+
+.ap-inspector {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 var(--ap-size-detail);
+  inline-size: var(--ap-size-detail);
+  background: var(--ap-surface-sunken);
+  border-inline-start: var(--ap-border-w) solid var(--ap-border-subtle);
+  overflow-y: auto;
+}
+
+.ap-inspector-head {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-8);
+  block-size: var(--ap-size-titlebar);
+  padding: 0 var(--ap-space-12);
+  border-block-end: var(--ap-border-w) solid var(--ap-border-subtle);
+}
+
+.ap-inspector-crumb {
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+}
+
+.ap-inspector-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-12);
+  padding: var(--ap-space-16);
+}
+
+.ap-inspector-title {
+  margin: 0;
+  font-size: var(--ap-fs-h2);
+  line-height: var(--ap-lh-h2);
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-inspector-note,
+.ap-inspector-actions {
+  display: flex;
+  gap: var(--ap-space-8);
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-memory-detail {
+  font-size: var(--ap-fs-body-lg);
+  line-height: var(--ap-lh-body-lg);
+  user-select: text;
+}
+
+.ap-kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ap-space-4) var(--ap-space-12);
+  margin: 0;
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+.ap-kv dt {
+  color: var(--ap-text-tertiary);
+}
+
+.ap-kv dd {
+  margin: 0;
+  color: var(--ap-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.ap-mono {
+  font-family: var(--ap-font-mono);
+  font-size: var(--ap-fs-code);
+  line-height: var(--ap-lh-code);
+}
+
+.ap-progress-note {
+  padding: var(--ap-space-8) var(--ap-space-12);
+  border-radius: var(--ap-radius-card);
+  background: var(--ap-warning-subtle);
+}
+
+.ap-progress-note h3 {
+  margin: 0 0 var(--ap-space-4);
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+  color: var(--ap-warning-text);
+}
+
+.ap-progress-body {
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+}
+
+/* ── 设置模态（IA §6.6） ──────────────────────────────────────────────── */
+
+.ap-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ap-z-scrim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ap-surface-scrim);
+}
+
+.ap-modal {
+  z-index: var(--ap-z-modal);
+  inline-size: var(--ap-size-detail);
+  max-block-size: calc(var(--ap-space-80) * 5);
+  overflow-y: auto;
+  background: var(--ap-surface-2);
+  border-radius: var(--ap-radius-modal);
+  box-shadow: var(--ap-shadow-pop);
+}
+
+.ap-modal-head {
+  display: flex;
+  align-items: center;
+  gap: var(--ap-space-8);
+  block-size: var(--ap-size-titlebar);
+  padding: 0 var(--ap-space-16);
+  border-block-end: var(--ap-border-w) solid var(--ap-border-subtle);
+}
+
+.ap-modal-title {
+  margin: 0;
+  font-size: var(--ap-fs-h2);
+  line-height: var(--ap-lh-h2);
+  font-weight: var(--ap-fw-semibold);
+}
+
+.ap-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-16);
+  padding: var(--ap-space-16);
+}
+
+.ap-settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-8);
+}
+
+.ap-settings-title {
+  margin: 0;
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+  font-weight: var(--ap-fw-medium);
+}
+
+.ap-settings-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ap-space-2);
+}
+
+.ap-settings-label {
+  color: var(--ap-text-tertiary);
+  font-size: var(--ap-fs-caption);
+  line-height: var(--ap-lh-caption);
+}
+
+.ap-settings-value {
+  font-size: var(--ap-fs-tool);
+  line-height: var(--ap-lh-tool);
+  overflow-wrap: anywhere;
+}
+
+/* ── 响应式降级（IA §1.4：`md` 以下检查器转覆盖式，<1024 侧栏折叠） ──── */
+
+@media (max-width: 1279px) {
+  .ap-inspector {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    z-index: var(--ap-z-dropdown);
+    box-shadow: var(--ap-shadow-lg);
+  }
+}
+
+@media (max-width: 1023px) {
+  .ap-sidebar {
+    flex-basis: var(--ap-space-64);
+    inline-size: var(--ap-space-64);
+  }
+
+  .ap-sidebar .ap-session-list {
+    display: none;
+  }
+
+  .ap-composer,
+  .ap-turn {
+    inline-size: auto;
+    max-inline-size: none;
+    margin-inline: var(--ap-space-16);
+  }
+}

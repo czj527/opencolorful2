@@ -154,7 +154,7 @@
 | 1px 分隔线、卡片内分隔 | `--ap-border-w` + `--ap-border-subtle` |
 | 控件描边、卡片描边 | `--ap-border-default` |
 | 选中/激活描边（含选中竖条） | `--ap-border-accent` |
-| 键盘焦点环 | `--ap-border-focus` + `--ap-focus-ring-width` + `--ap-focus-ring-offset` |
+| 键盘焦点环 | `--ap-border-focus` + `--ap-focus-ring-width`（3px）+ `--ap-focus-ring-offset` + 浅底 `--ap-shadow-glow` |
 | 主按钮底 / 主按钮文字 | `--ap-accent` / `--ap-text-on-accent`（或 `--ap-accent-on`） |
 | 主按钮悬停 / 按下 | `--ap-accent-hover` / `--ap-accent-active` |
 | 选中行浅底、标签浅底 | `--ap-accent-subtle` |
@@ -188,12 +188,12 @@
 |---|---|
 | 消息气泡（用户） | `--ap-radius-bubble` |
 | 卡片（错误条、任务条、记忆条目） | `--ap-radius-card` |
-| 工具卡片 | `--ap-radius-tool-card` |
+| 工具卡片 | `--ap-radius-tool-card`；卡内嵌套块（参数区 L4、确认区）用 **`--ap-radius-inset`**（同心圆角，tokens.md §5.3 公式） |
 | 按钮、输入框、下拉、行内小块 | `--ap-radius-control` |
 | 模态 | `--ap-radius-modal` |
 | 状态点、头像、胶囊 | `--ap-radius-pill` / `--ap-radius-full` |
 | 静止输入框 / 卡片与工具卡 / 浮起输入框 / 侧拉检查器 / 模态 | `--ap-shadow-xs` / `--ap-shadow-sm` / `--ap-shadow-md` / `--ap-shadow-lg` / `--ap-shadow-pop` |
-| 焦点光晕 | `--ap-shadow-glow` |
+| 焦点光晕 | `--ap-shadow-glow`（浅底衬垫，与 `--ap-border-focus` 外环成对） |
 | 覆盖式检查器浮层 / 其遮罩 / 模态 / Toast / Tooltip | `--ap-z-dropdown` / `--ap-z-sidebar` / `--ap-z-modal`+`--ap-z-scrim` / `--ap-z-toast` / `--ap-z-tooltip` |
 | 粘性聊天顶栏 / 吸顶提示条 | `--ap-z-raised` / `--ap-z-sticky` |
 | 微交互（悬停、退场、撤销） | `--ap-duration-instant`（80ms）+ `--ap-ease-standard` |
@@ -710,7 +710,7 @@
 3. **确认区（§4.4）**：出现时焦点移到 `允许一次`；`Esc` 拒绝并归还焦点给输入框。
 4. **视图切换后**：`Ctrl/Cmd + 1` 后焦点落输入框（用户来对话就是要说话）；`2` 落搜索框；`3` 落列表第一项。
 5. **发送后**：焦点**保持在输入框**（可以立刻继续打字），不做任何焦点跳转。
-6. **可见焦点**：所有可聚焦元素 `:focus-visible` 显示 `--ap-focus-ring-width`（2px）外环，色 `--ap-border-focus`，偏移 `--ap-focus-ring-offset`（2px）；禁止 `outline: none`（tokens.md §5.5）。
+6. **可见焦点**：所有可聚焦元素 `:focus-visible` 显示 `--ap-focus-ring-width`（3px）外环，色 `--ap-border-focus`，加同色系浅底 `--ap-shadow-glow`（方案B：**外环承担 ≥3:1 对比，浅底只做衬垫**），偏移 `--ap-focus-ring-offset`（2px）；禁止 `outline: none`（tokens.md §5.5）。
 7. **Tab 顺序**：左侧栏 → 顶栏 → 消息流 → 输入区 → 检查器，与视觉顺序一致（禁止 `tabindex` 正值）。
 
 ### 7.5 ARIA 角色要点（TS 实现逐条对照）

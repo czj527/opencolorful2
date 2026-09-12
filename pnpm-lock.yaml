@@ -36,15 +36,43 @@ importers:
         specifier: 33.2.1
         version: 33.2.1
 
-  packages/agent-core:
+  apps/server:
     dependencies:
+      '@agentplant/agent-core':
+        specifier: workspace:*
+        version: link:../../packages/agent-core
+      '@agentplant/protocol':
+        specifier: workspace:*
+        version: link:../../packages/protocol
       '@agentplant/state':
         specifier: workspace:*
-        version: link:../state
+        version: link:../../packages/state
+
+  apps/web:
+    dependencies:
+      '@agentplant/protocol':
+        specifier: workspace:*
+        version: link:../../packages/protocol
+    devDependencies:
+      typescript:
+        specifier: 5.7.2
+        version: 5.7.2
+
+  packages/agent-core:
+    dependencies:
+      '@agentplant/protocol':
+        specifier: workspace:*
+        version: link:../protocol
 
   packages/gateway-protocol: {}
 
   packages/plugin-sdk: {}
+
+  packages/protocol:
+    dependencies:
+      '@sinclair/typebox':
+        specifier: ^0.34.52
+        version: 0.34.52
 
   packages/state: {}
 
@@ -409,6 +437,9 @@ packages:
     resolution: {integrity: sha512-at8QVep6S3h5Y6gSbdGU06bRY5WJkf6WUduM9YtvYMbYhB1MOFfUgc6kehitQXzOtMSaT70q7f9ydPhpqu821w==}
     cpu: [x64]
     os: [win32]
+
+  '@sinclair/typebox@0.34.52':
+    resolution: {integrity: sha512-XiMQh7qqVlxZzcVD+kkGMNGMzcTrDMLWI7S4x7z1MkCkbDPrekpZXEUK0eZqZFMuHQg2a2DZOcDIh9o5v3Gonw==}
 
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
@@ -1506,6 +1537,8 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.63.1':
     optional: true
+
+  '@sinclair/typebox@0.34.52': {}
 
   '@sindresorhus/is@4.6.0': {}
 

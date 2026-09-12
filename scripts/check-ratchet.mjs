@@ -38,12 +38,14 @@ const IGNORED_DIRS = new Set(["node_modules", "dist", "out", "coverage", ".turbo
 
 /** 统计分组：与 t3 §1 仓结构对应。 */
 function targetGroups() {
+  // 与 t3 §1 §8 落定的 packages 清单保持一致：新增包必须同步登记到本列表，
+  // 否则该包不计入棘轮（"未登记"比"超限"危险：它会让 LOC 增长完全不被看见）。
   return [
-    ...["agent-core", "state", "gateway-protocol", "plugin-sdk"].map((name) => ({
+    ...["protocol", "agent-core", "state", "gateway-protocol", "plugin-sdk"].map((name) => ({
       key: `packages/${name}`,
       dir: path.join(REPO_ROOT, "packages", name),
     })),
-    ...["desktop"].map((name) => ({
+    ...["desktop", "web", "server"].map((name) => ({
       key: `apps/${name}`,
       dir: path.join(REPO_ROOT, "apps", name),
     })),

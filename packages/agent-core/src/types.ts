@@ -69,6 +69,11 @@ export interface ToolResult<D = unknown> {
 /**
  * 工具契约。`parameters` 的 schema 类型（TypeBox `TSchema`）由 t4 分派任务引入，
  * 骨架期以 `unknown` 占位，避免提前引入运行时依赖。
+ *
+ * 形状已冻结在 `packages/protocol`（t3 §8 落定：protocol = 前后端共享 schema）：
+ * 7 个内置工具的参数 schema 与状态字面量见 `@agentplant/protocol` 的
+ * `TOOL_PARAM_SCHEMAS` / `ToolParams` / `ToolStatus`；本接口的 `P` 即由调用方
+ * 用 `Static<typeof TOOL_PARAM_SCHEMAS["read_file"]>` 之类实例化。
  */
 export interface Tool<P = unknown, D = unknown> {
   readonly name: string;

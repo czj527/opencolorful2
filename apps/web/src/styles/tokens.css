@@ -1,0 +1,506 @@
+/*
+ * agentplant design tokens —— apps/web 渲染层唯一 token 文件（构建期原样拷入 dist/styles/）
+ *
+ * 真相源：`docs/design/tokens.md` 附录 A（§7.2 的 `:root` / `[data-theme="dark"]` 代码块）。
+ * **本文件不得手改**：任何取值改动必须回到 tokens.md 再重新落盘，否则
+ * `node scripts/check-tokens.mjs` 会以"与 tokens.md 不一致"为由失败（CI 硬门禁）。
+ *
+ * 主题机制（tokens.md §7.4/§8）：默认 auto 跟随系统 prefers-color-scheme，
+ * `:root` 字面兜底浅色；`data-theme` 由 theme-init.js 在样式表生效前写入（防 FOUC）。
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ─── L1 原始色板 ─────────────────────────────────────────────────── */
+  /* 暖纸 paper */
+  --ap-paper-50:  #FFFDF8;
+  --ap-paper-100: #FBF7EE;
+  --ap-paper-200: #F5EFE4;
+  --ap-paper-300: #EFE8DB;
+  --ap-paper-400: #E9E1D2;
+  --ap-paper-500: #D8CFBE;
+  --ap-paper-600: #B4A68C;
+  /* 暖墨 ink */
+  --ap-ink-300: #A79C8C;
+  --ap-ink-500: #6E6455;
+  --ap-ink-600: #61584C;
+  --ap-ink-700: #4A433C;
+  --ap-ink-800: #2A2622;
+  /* 夜 night */
+  --ap-night-400: #4E5F6C;
+  --ap-night-500: #2F3F4A;
+  --ap-night-600: #2B3A45;
+  --ap-night-700: #22303A;
+  --ap-night-800: #1A242B;
+  --ap-night-900: #111A20;
+  --ap-night-950: #101B22;
+  /* 冷雾 mist */
+  --ap-mist-50:  #E9EFF3;
+  --ap-mist-100: #C3D1DA;
+  --ap-mist-200: #A9BAC5;
+  --ap-mist-300: #96A9B4;
+  --ap-mist-400: #8A9DA8;
+  --ap-mist-500: #6B7E8A;
+  /* 印章青蓝 seal（唯一强调色） */
+  --ap-seal-100: #E7F0F5;
+  --ap-seal-200: #D3E3EC;
+  --ap-seal-300: #9FC3D6;
+  --ap-seal-400: #6FA0BC;
+  --ap-seal-500: #45708A;
+  --ap-seal-600: #3F6179;
+  --ap-seal-700: #2F4E60;
+  /* 余温 ember（陪伴暖色） */
+  --ap-ember-50:  #F7EFE8;
+  --ap-ember-300: #E0A87F;
+  --ap-ember-500: #B27049;
+  --ap-ember-600: #A9663A;
+  --ap-ember-700: #8A5433;
+  --ap-ember-800: #8A4F26;
+  /* 苔绿 sage（动手 / 工具） */
+  --ap-sage-400: #96CDB8;
+  --ap-sage-500: #86BFAA;
+  --ap-sage-600: #4F7F6E;
+  --ap-sage-700: #3D6355;
+  /* 苔藓绿 moss（success） */
+  --ap-moss-200: #B9CFB4;
+  --ap-moss-300: #8CC790;
+  --ap-moss-400: #7FBE84;
+  --ap-moss-500: #3A6B45;
+  --ap-moss-600: #33613E;
+  /* 陶土 clay（danger） */
+  --ap-clay-200: #E0B3A8;
+  --ap-clay-300: #E59A92;
+  --ap-clay-400: #D9736A;
+  --ap-clay-600: #8B2C1F;
+  --ap-clay-700: #6E2117;
+  /* 麦黄 wheat（warning） */
+  --ap-wheat-200: #E0C89A;
+  --ap-wheat-300: #E0B45C;
+  --ap-wheat-600: #7A4E0E;
+  /* 鸢尾 iris（emotion-curious） */
+  --ap-iris-300: #A8B6E0;
+  --ap-iris-500: #5B6FA8;
+
+  /* ─── L2 表面 surface ─────────────────────────────────────────────── */
+  --ap-surface-0: var(--ap-paper-200);
+  --ap-surface-1: var(--ap-paper-100);
+  --ap-surface-2: var(--ap-paper-50);
+  --ap-surface-sunken: var(--ap-paper-300);
+  --ap-surface-inset: #F4EFE5;
+  --ap-surface-code: #F2EDE2;
+  --ap-surface-bubble-user: #EAF0F4;
+  --ap-surface-row-hover: #F5F0E5;
+  --ap-surface-row-selected: #D8E5EC;
+  --ap-surface-scrim: rgb(42 38 34 / 0.45);
+
+  /* ─── L2 文字 text ───────────────────────────────────────────────── */
+  --ap-text-primary: var(--ap-ink-800);
+  --ap-text-secondary: var(--ap-ink-700);
+  --ap-text-tertiary: var(--ap-ink-600);
+  --ap-text-muted: var(--ap-ink-500);
+  --ap-text-disabled: var(--ap-ink-300);
+  --ap-text-inverse: var(--ap-paper-100);
+  --ap-text-on-accent: var(--ap-paper-50);
+
+  /* ─── L2 边框 border ─────────────────────────────────────────────── */
+  --ap-border-subtle: var(--ap-paper-400);
+  --ap-border-default: var(--ap-paper-500);
+  --ap-border-strong: var(--ap-paper-600);
+  --ap-border-accent: var(--ap-seal-500);
+  --ap-border-focus: var(--ap-seal-500);
+  --ap-border-success: var(--ap-moss-200);
+  --ap-border-warning: var(--ap-wheat-200);
+  --ap-border-danger: var(--ap-clay-200);
+  --ap-border-info: #AECBDA;
+
+  /* ─── L2 强调 accent ─────────────────────────────────────────────── */
+  /* 实心三档 = 中性墨色（方案B；镜像 text-primary 的中性档位，品牌青蓝只留文字/描边/focus） */
+  --ap-accent: var(--ap-ink-800);
+  --ap-accent-hover: var(--ap-ink-700);
+  --ap-accent-active: var(--ap-ink-600);
+  --ap-accent-text: var(--ap-seal-600);
+  --ap-accent-subtle: var(--ap-seal-100);
+  --ap-accent-on: var(--ap-paper-50);
+
+  /* ─── L2 语义状态 ────────────────────────────────────────────────── */
+  --ap-success: var(--ap-moss-500);
+  --ap-success-hover: var(--ap-moss-600);
+  --ap-success-text: var(--ap-moss-600);
+  --ap-success-subtle: #E9F1E7;
+  --ap-success-border: var(--ap-moss-200);
+  --ap-success-on: var(--ap-paper-50);
+
+  --ap-warning-text: var(--ap-wheat-600);
+  --ap-warning-subtle: #FBF0DC;
+  --ap-warning-border: var(--ap-wheat-200);
+
+  --ap-danger: var(--ap-clay-600);
+  --ap-danger-hover: var(--ap-clay-700);
+  --ap-danger-text: var(--ap-clay-600);
+  --ap-danger-subtle: #FBEAE6;
+  --ap-danger-border: var(--ap-clay-200);
+  --ap-danger-on: var(--ap-paper-50);
+
+  --ap-info-text: var(--ap-seal-700);
+  --ap-info-subtle: var(--ap-seal-100);
+  --ap-info-border: #AECBDA;
+
+  /* ─── L2 presence（陪伴感五态） ──────────────────────────────────── */
+  --ap-presence-idle: #6F7E88;
+  --ap-presence-idle-text: #58666F;
+  --ap-presence-thinking: var(--ap-ember-500);
+  --ap-presence-thinking-text: var(--ap-ember-700);
+  --ap-presence-thinking-subtle: var(--ap-ember-50);
+  --ap-presence-streaming: var(--ap-seal-500);
+  --ap-presence-streaming-text: var(--ap-seal-600);
+  --ap-presence-acting: var(--ap-sage-600);
+  --ap-presence-acting-text: var(--ap-sage-700);
+  --ap-presence-awaiting: var(--ap-ember-600);
+  --ap-presence-awaiting-text: var(--ap-ember-800);
+  --ap-presence-dot-size: 8px;
+  --ap-presence-dot-size-lg: 10px;
+  --ap-presence-ring-width: 2px;
+  --ap-presence-ring-offset: 2px;
+
+  /* ─── L2 ambient（环境氛围） ─────────────────────────────────────── */
+  --ap-ambient-room: var(--ap-paper-200);
+  --ap-ambient-vignette: rgb(42 38 34 / 0.06);
+  --ap-ambient-desk-edge: rgb(216 207 190 / 0.55);
+  --ap-ambient-paper-opacity: 0.035;
+  --ap-ambient-glow-thinking: rgb(178 112 73 / 0.10);
+  --ap-ambient-glow-streaming: rgb(69 112 138 / 0.08);
+  --ap-ambient-glow-acting: rgb(79 127 110 / 0.08);
+  --ap-ambient-glow-size: 480px;
+  --ap-ambient-glow-blur: 80px;
+  /* 时间氛围（可选）：默认关闭，运行时按 data-ambient-hour 覆写 */
+  --ap-ambient-hour-tint: rgb(0 0 0 / 0);
+  --ap-ambient-hour-glow-scale: 0;
+
+  /* ─── L2 emotion（情绪点缀） ─────────────────────────────────────── */
+  --ap-emotion-warm: #B4703F;
+  --ap-emotion-curious: var(--ap-iris-500);
+  --ap-emotion-caution: #96702A;
+  --ap-emotion-serious: #6B5B7A;
+
+  /* ─── L3 字体 ────────────────────────────────────────────────────── */
+  --ap-font-sans: 'Inter var', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI Variable Text', 'Segoe UI', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --ap-font-display: 'Source Serif 4', 'Iowan Old Style', 'Georgia', 'Songti SC', 'STSong', 'Source Han Serif SC', 'Noto Serif SC', serif;
+  --ap-font-mono: 'JetBrains Mono', 'Cascadia Code', 'Cascadia Mono', 'SF Mono', 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', 'Noto Sans Mono CJK SC', monospace;
+  --ap-font-emoji: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji';
+
+  /* ─── L3 字号 / 行高 / 字重 / 字距 ───────────────────────────────── */
+  --ap-fs-display: 28px;   --ap-lh-display: 36px;
+  --ap-fs-h1: 20px;        --ap-lh-h1: 28px;
+  --ap-fs-h2: 17px;        --ap-lh-h2: 26px;
+  --ap-fs-body-lg: 16px;   --ap-lh-body-lg: 26px;
+  --ap-fs-body: 15px;      --ap-lh-body: 24px;
+  --ap-fs-ui: 14px;        --ap-lh-ui: 20px;
+  --ap-fs-caption: 12px;   --ap-lh-caption: 18px;
+  --ap-fs-micro: 11px;     --ap-lh-micro: 16px;
+  --ap-fs-code: 13px;      --ap-lh-code: 22px;
+  --ap-fs-tool: 13px;      --ap-lh-tool: 20px;
+  --ap-fw-regular: 400;
+  --ap-fw-medium: 500;
+  --ap-fw-semibold: 600;
+  --ap-fw-bold: 700;
+  --ap-tracking-tight: -0.01em;
+  --ap-tracking-normal: 0;
+  --ap-tracking-wide: 0.02em;
+
+  /* ─── L3 间距 ────────────────────────────────────────────────────── */
+  --ap-space-0: 0px;
+  --ap-space-2: 2px;
+  --ap-space-4: 4px;
+  --ap-space-6: 6px;
+  --ap-space-8: 8px;
+  --ap-space-12: 12px;
+  --ap-space-16: 16px;
+  --ap-space-20: 20px;
+  --ap-space-24: 24px;
+  --ap-space-32: 32px;
+  --ap-space-40: 40px;
+  --ap-space-48: 48px;
+  --ap-space-64: 64px;
+  --ap-space-80: 80px;
+
+  /* ─── L3 尺寸 ────────────────────────────────────────────────────── */
+  --ap-size-sidebar: 248px;
+  --ap-size-detail: 320px;
+  --ap-size-titlebar: 44px;
+  --ap-size-chat-max: 760px;
+  --ap-size-composer-max: 760px;
+  --ap-size-toolbar: 36px;
+  --ap-size-control: 32px;
+  --ap-size-control-sm: 24px;
+  --ap-size-avatar: 28px;
+  --ap-size-avatar-lg: 40px;
+  --ap-size-indicator-rail: 3px;
+  --ap-breakpoint-compact: 1024px;
+
+  /* ─── L3 圆角 ────────────────────────────────────────────────────── */
+  --ap-radius-none: 0px;
+  --ap-radius-xs: 2px;
+  --ap-radius-sm: 4px;
+  --ap-radius-md: 6px;
+  --ap-radius-lg: 10px;
+  --ap-radius-xl: 14px;
+  --ap-radius-2xl: 20px;
+  --ap-radius-full: 9999px;
+  --ap-radius-control: var(--ap-radius-md);
+  --ap-radius-card: var(--ap-radius-lg);
+  --ap-radius-bubble: var(--ap-radius-xl);
+  --ap-radius-tool-card: 8px;
+  /* 同心圆角：内层 = 外层 − 内边距 − 发丝线（var() 不能作被减数，故在组件侧显式展开） */
+  --ap-radius-inset: calc(var(--ap-radius-lg) - var(--ap-space-12) - var(--ap-border-w));
+  --ap-radius-modal: var(--ap-radius-xl);
+  --ap-radius-pill: var(--ap-radius-full);
+
+  /* ─── L3 阴影 ────────────────────────────────────────────────────── */
+  --ap-shadow-none: none;
+  --ap-shadow-xs: 0 1px 2px rgb(42 38 34 / 0.05);
+  --ap-shadow-sm: 0 1px 3px rgb(42 38 34 / 0.06), 0 1px 2px rgb(42 38 34 / 0.04);
+  --ap-shadow-md: 0 4px 12px rgb(42 38 34 / 0.07), 0 1px 3px rgb(42 38 34 / 0.05);
+  --ap-shadow-lg: 0 12px 32px rgb(42 38 34 / 0.10), 0 2px 8px rgb(42 38 34 / 0.06);
+  --ap-shadow-pop: 0 20px 48px rgb(42 38 34 / 0.16), 0 4px 12px rgb(42 38 34 / 0.08);
+  --ap-shadow-inset-hairline: inset 0 1px 0 rgb(255 255 255 / 0.60);
+  --ap-shadow-glow: 0 0 0 3px rgb(42 38 34 / 0.14);
+  --ap-shadow-ambient: 0 0 60px 20px rgb(42 38 34 / 0.04);
+
+  /* ─── L3 边框宽度 / 聚焦环 ───────────────────────────────────────── */
+  --ap-border-w-hairline: 0.5px;
+  --ap-border-w: 1px;
+  --ap-border-w-strong: 2px;
+  --ap-border-w-rail: 3px;
+  --ap-focus-ring-width: 3px;
+  --ap-focus-ring-offset: 2px;
+
+  /* ─── L3 z-index ─────────────────────────────────────────────────── */
+  --ap-z-base: 0;
+  --ap-z-raised: 10;
+  --ap-z-sticky: 20;
+  --ap-z-sidebar: 30;
+  --ap-z-dropdown: 40;
+  --ap-z-scrim: 50;
+  --ap-z-modal: 60;
+  --ap-z-popover: 65;
+  --ap-z-toast: 70;
+  --ap-z-tooltip: 80;
+  --ap-z-dev-overlay: 90;
+
+  /* ─── L3 不透明度 ────────────────────────────────────────────────── */
+  --ap-opacity-disabled: 0.45;
+  --ap-opacity-muted: 0.72;
+  --ap-opacity-emotion: 0.60;
+  --ap-opacity-scrim: 0.45;
+  --ap-opacity-hidden: 0;
+
+  /* ─── L3 动效 ────────────────────────────────────────────────────── */
+  --ap-duration-0: 0ms;
+  --ap-duration-instant: 80ms;
+  --ap-duration-fast: 140ms;
+  --ap-duration-base: 200ms;
+  --ap-duration-slow: 320ms;
+  --ap-duration-slower: 480ms;
+  --ap-duration-stream: 90ms;
+  --ap-duration-caret: 1000ms;
+  --ap-duration-breath: 2400ms;
+  --ap-duration-pulse: 900ms;
+  --ap-duration-dwell-toast: 6000ms;
+  --ap-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ap-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ap-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ap-ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ap-ease-breathe: cubic-bezier(0.37, 0, 0.63, 1);
+  --ap-ease-settle: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --ap-motion-scale: 1;
+  --ap-motion-slide-sm: 4px;
+  --ap-motion-slide-md: 8px;
+  --ap-motion-slide-lg: 24px;
+  --ap-motion-enter-scale: 0.96;
+  --ap-motion-caret-width: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   深色主题：只覆盖 L2 语义层与主题相关的 L3（阴影 / 光晕）
+   ══════════════════════════════════════════════════════════════════════════ */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* 表面 */
+  --ap-surface-0: var(--ap-night-800);
+  --ap-surface-1: var(--ap-night-700);
+  --ap-surface-2: var(--ap-night-600);
+  --ap-surface-sunken: var(--ap-night-900);
+  --ap-surface-inset: #1E2A33;
+  --ap-surface-code: #16222A;
+  --ap-surface-bubble-user: var(--ap-night-600);
+  --ap-surface-row-hover: #24323C;
+  --ap-surface-row-selected: #2A3C49;
+  --ap-surface-scrim: rgb(0 0 0 / 0.58);
+
+  /* 文字 */
+  --ap-text-primary: var(--ap-mist-50);
+  --ap-text-secondary: var(--ap-mist-100);
+  --ap-text-tertiary: var(--ap-mist-200);
+  --ap-text-muted: var(--ap-mist-300);
+  --ap-text-disabled: var(--ap-mist-500);
+  --ap-text-inverse: var(--ap-night-950);
+  --ap-text-on-accent: var(--ap-night-950);
+
+  /* 边框 */
+  --ap-border-subtle: #26343D;
+  --ap-border-default: var(--ap-night-500);
+  --ap-border-strong: var(--ap-night-400);
+  --ap-border-accent: var(--ap-seal-400);
+  --ap-border-focus: var(--ap-seal-400);
+  --ap-border-success: #33513C;
+  --ap-border-warning: #5C4A22;
+  --ap-border-danger: #5C332E;
+  --ap-border-info: #2E4A58;
+
+  /* 强调（方案B：实心三档 = 中性墨色，镜像 text-primary 的暗色档位；文字/浅底保留品牌青蓝） */
+  --ap-accent: var(--ap-mist-50);
+  --ap-accent-hover: var(--ap-mist-100);
+  --ap-accent-active: var(--ap-mist-200);
+  --ap-accent-text: var(--ap-seal-300);
+  --ap-accent-subtle: #26343D;
+  --ap-accent-on: var(--ap-night-950);
+
+  /* 语义状态 */
+  --ap-success: var(--ap-moss-400);
+  --ap-success-hover: var(--ap-moss-300);
+  --ap-success-text: var(--ap-moss-300);
+  --ap-success-subtle: #17251C;
+  --ap-success-border: #33513C;
+  --ap-success-on: var(--ap-night-950);
+
+  --ap-warning-text: var(--ap-wheat-300);
+  --ap-warning-subtle: #2A2214;
+  --ap-warning-border: #5C4A22;
+
+  --ap-danger: var(--ap-clay-400);
+  --ap-danger-hover: var(--ap-clay-300);
+  --ap-danger-text: var(--ap-clay-300);
+  --ap-danger-subtle: #2A1A18;
+  --ap-danger-border: #5C332E;
+  --ap-danger-on: var(--ap-night-950);
+
+  --ap-info-text: var(--ap-seal-300);
+  --ap-info-subtle: #16242C;
+  --ap-info-border: #2E4A58;
+
+  /* presence */
+  --ap-presence-idle: var(--ap-mist-400);
+  --ap-presence-idle-text: var(--ap-mist-200);
+  --ap-presence-thinking: var(--ap-ember-300);
+  --ap-presence-thinking-text: var(--ap-ember-300);
+  --ap-presence-thinking-subtle: rgb(224 168 127 / 0.10);
+  --ap-presence-streaming: var(--ap-seal-400);
+  --ap-presence-streaming-text: var(--ap-seal-300);
+  --ap-presence-acting: var(--ap-sage-500);
+  --ap-presence-acting-text: var(--ap-sage-400);
+  --ap-presence-awaiting: #F0BE93;
+  --ap-presence-awaiting-text: #F0BE93;
+
+  /* ambient */
+  --ap-ambient-room: var(--ap-night-800);
+  --ap-ambient-vignette: rgb(0 0 0 / 0.45);
+  --ap-ambient-desk-edge: rgb(47 63 74 / 0.55);
+  --ap-ambient-paper-opacity: 0.02;
+  --ap-ambient-glow-thinking: rgb(224 168 127 / 0.12);
+  --ap-ambient-glow-streaming: rgb(111 160 188 / 0.10);
+  --ap-ambient-glow-acting: rgb(134 191 170 / 0.10);
+
+  /* emotion */
+  --ap-emotion-warm: #E8B589;
+  --ap-emotion-curious: var(--ap-iris-300);
+  --ap-emotion-caution: #DCBE7A;
+  --ap-emotion-serious: #BFAFD0;
+
+  /* 阴影与 focus 光晕（暗色下阴影仅作边缘分离，深度靠表面层差） */
+  --ap-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.30);
+  --ap-shadow-sm: 0 1px 3px rgb(0 0 0 / 0.42), 0 1px 2px rgb(0 0 0 / 0.30);
+  --ap-shadow-md: 0 4px 12px rgb(0 0 0 / 0.48), 0 1px 3px rgb(0 0 0 / 0.32);
+  --ap-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55), 0 2px 8px rgb(0 0 0 / 0.38);
+  --ap-shadow-pop: 0 20px 48px rgb(0 0 0 / 0.62), 0 4px 12px rgb(0 0 0 / 0.40);
+  --ap-shadow-inset-hairline: inset 0 1px 0 rgb(233 239 243 / 0.06);
+  --ap-shadow-glow: 0 0 0 3px rgb(233 239 243 / 0.16);
+  --ap-shadow-ambient: 0 0 80px 24px rgb(0 0 0 / 0.28);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   全局基线（tokens 的强制副作用；写在同一文件以免遗漏）
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  font-synthesis: none;            /* 禁止 CJK 伪粗体 / 伪斜体 */
+  accent-color: var(--ap-accent);
+}
+
+/* 动效降级：系统偏好与用户手动开关走同一套值 */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ap-motion-scale: 0;
+    --ap-motion-enter-scale: 1;
+    --ap-duration-instant: 1ms;
+    --ap-duration-fast: 1ms;
+    --ap-duration-base: 1ms;
+    --ap-duration-slow: 1ms;
+    --ap-duration-slower: 1ms;
+    --ap-duration-stream: 1ms;
+    --ap-duration-breath: 0ms;
+    --ap-duration-pulse: 0ms;
+    --ap-duration-caret: 0ms;
+    --ap-duration-dwell-toast: 8000ms;
+  }
+}
+[data-motion='reduced'] {
+  --ap-motion-scale: 0;
+  --ap-motion-enter-scale: 1;
+  --ap-duration-instant: 1ms;
+  --ap-duration-fast: 1ms;
+  --ap-duration-base: 1ms;
+  --ap-duration-slow: 1ms;
+  --ap-duration-slower: 1ms;
+  --ap-duration-stream: 1ms;
+  --ap-duration-breath: 0ms;
+  --ap-duration-pulse: 0ms;
+  --ap-duration-caret: 0ms;
+  --ap-duration-dwell-toast: 8000ms;
+}
+
+/* presence 关键帧（tokens 层持有；组件只引用 animate-* token） */
+@keyframes ap-presence-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(calc(1 + 0.05 * var(--ap-motion-scale))); }
+}
+@keyframes ap-presence-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+@keyframes ap-caret {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes ap-enter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--ap-motion-slide-sm) * var(--ap-motion-scale)))
+               scale(calc(1 - (1 - var(--ap-motion-enter-scale)) * var(--ap-motion-scale)));
+  }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes ap-stream-tail {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
+
+/* reduced-motion 下关闭持续型动画（静态状态由 presence 文字标签承担） */
+@media (prefers-reduced-motion: reduce) {
+  .animate-ap-presence-breathe,
+  .animate-ap-presence-pulse,
+  .animate-ap-caret { animation: none; }
+}
+[data-motion='reduced'] .animate-ap-presence-breathe,
+[data-motion='reduced'] .animate-ap-presence-pulse,
+[data-motion='reduced'] .animate-ap-caret { animation: none; }

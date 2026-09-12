@@ -10,7 +10,7 @@
   pnpm-workspace.yaml          # packages/*, apps/*
   package.json                 # root scripts: dev/build/lint/typecheck/test/ratchet
   tsconfig.base.json
-  .github/workflows/ci.yml     # 唯一必需 workflow（lint→type→test→build）
+  .github/workflows/ci.yml     # 唯一必需 workflow（lint→build→type→test）
   config/size-baseline.json    # 工程棘轮基线（只减不增）
   scripts/check-ratchet.mjs    # 棘轮检查脚本
   scripts/verify-release.mjs   # 发布产物校验（t7 §1.1）
@@ -40,13 +40,31 @@ M2 目录只留 stub + README 说明二期启用，禁止提前实现。
 
 ## 3. CI 门禁（.github/workflows/ci.yml，Node 22）
 
-顺序执行，任一失败即红：
+顺序执行，任一失败即红（2026-09-11 修订：build 提前到 typecheck 与 test 之前，见下）：
 1. `pnpm install --frozen-lockfile`
 2. `pnpm lint`（eslint flat，全仓）
-3. `pnpm typecheck`（tsc --noEmit 全 workspace）
-4. `pnpm test`（vitest run）
-5. `pnpm build`（全 workspace 真实构建产物）
-6. `pnpm check:ratchet`（见 §5）
+3. `pnpm build`（全 workspace 真实构建产物）
+4. build artifacts（产物存在性断言，反假绿 t7 FG-01/FG-02）
+5. `pnpm typecheck`（tsc --noEmit 全 workspace）
+6. `pnpm test`（vitest run）
+7. `pnpm check:tokens`（t5 门禁调用位；与 `pnpm test` 同级门禁语义不变，
+   脚本本体 t5 落地，当前显式 PENDING 不静默通过，见 §6-5）
+8. `pnpm version:check`（版本戳单一来源一致，见 §6-6）
+9. `pnpm check:ratchet`（见 §5）
+10. verify-release 脚本自检（`node --check` + `--self-test`，真实目录校验留 t7 本地）
+
+**为什么 build 必须先于 typecheck 与 test（根因，2026-09-11 修订）**：各包
+`package.json` 的 `main`/`exports`/`types` 指向 `./dist/index.js` / `./dist/index.d.ts`，
+而 `dist/` 被 `.gitignore` 排除、**不进仓**。干净检出（CI 的 checkout）没有 dist，
+跨包 import 在 resolve 入口时失败 → **test 必红**（如 `apps/server` 引
+`@agentplant/state`，实测原文 `Failed to resolve entry for package "@agentplant/agent-core"`）。
+**typecheck 同因必红**：跨包**类型**解析同样走 `types → ./dist/index.d.ts`，故 build 在
+typecheck 之前是硬性依赖，不只是 test 的前置。本地"test 先过"多为上一轮 build
+残留的 dist 造成的假象，不代表干净检出可通过。
+故 CI 把 build + 产物断言整体前移到 typecheck 与 test 之前；仓内 tsconfig 均未设
+`noEmitOnError`，build 即使有类型错误也会 emit 出 dist（build 自身 exit 非 0 照红 CI，
+语义正确），typecheck 随后在 dist 齐备下做真检查；**不采用 vitest/tsconfig src alias
+方案**：那会让检查跑在源码上、与线上实际消费的 dist 产物不一致，且侵入面大。
 
 `main` 分支保护：要求 ci 全绿；暂不要求 review（单人），M2 有外部贡献者再加。
 
@@ -82,19 +100,31 @@ M2 目录只留 stub + README 说明二期启用，禁止提前实现。
    无真实来源时明确报错，禁止硬编码通过）。
 7. 本地验证：`pnpm install` + lint/typecheck/test/build/ratchet 自检全绿。
 
-推仓阶段（待用户当面确认后放行，captain 指令为准）：
-8. `gh repo create <name> --<visibility> --source=. --push`。
-9. 开 `main` 分支保护（要求 ci 全绿）。
-10. 回报：仓库 URL、首个 CI 运行链接、本地验证结果、可执行证据。
+推仓阶段（已放行并执行，2026-09-11）：
+8. `gh repo create czj527/opencolorful2 --private` + push（MIT，main HEAD e808c92）✅
+   仓库 https://github.com/czj527/opencolorful2 ；CI 首跑
+   https://github.com/czj527/opencolorful2/actions/runs/34593389336 （success，
+   commit e808c92）；本地验证全绿；verify-release --self-test 6/6 ✅
+   （远端三项我已用 gh 亲验：visibility=PRIVATE、CI conclusion=success、
+   ls-remote HEAD=e808c92）。
+9. `main` 分支保护（要求 ci 全绿）✅ 已生效（2026-09-11，用户三选一选②改 public）：
+   方式为 classic branch protection API（非 rulesets，rulesets 查询为空）；
+   required_status_checks contexts=["ci"] + strict=true + enforce_admins=true，
+   force push/删除均关闭。实操坑已记录：gh 改公开需
+   `--accept-visibility-change-consequences`；PUT payload 必须无 BOM JSON。
 
 ## 7. 用户拍板结果（captain 当面核实，2026-09-11：推仓放行）
 
-- 仓库：`czj527/opencolorful2`，私有，MIT。
+- 仓库：`czj527/opencolorful2`，**公开**（原私有；用户三选一选②改 public，2026-09-11），MIT。
 - 同仓口径：server+web 内核 + desktop 壳调和（§1/§8 落定）；packages 按 t4
   纯度分层（protocol/agent-core），领域划分作废。
 - 品牌色：未二选一，要求先参考 kimi code web 极简优雅实用风（已转 frontend-visual，
   t3 按青蓝默认继续，不阻塞）。
 - MVP 时间盒：不设。
+- 分支保护（用户三选一选②改 public，已生效 2026-09-11）：classic API，
+  contexts=["ci"] + strict + enforce_admins；owner 直接 push main 同样被拒
+  （enforce_admins=true 为可强制的必要项；如用户要保留 owner 绕过资格，
+  改 enforce_admins=false，一条 PATCH，待用户口径）。
 
 ## 8. 与 t4 §1 的同仓结构差异（已落定 2026-09-11）
 

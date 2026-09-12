@@ -1,8 +1,9 @@
 /**
- * Electron 主进程（M1 最小占位 + 版本戳注入的消费端）。
+ * Electron 主进程（M1 壳 + 版本戳注入的消费端）。
  *
  * 只做两件事：开一个窗口加载**构建产物**、把构建期注入的版本戳经 IPC 交给渲染层。
- * 聊天主循环 / 工具 / 记忆 / SQLite / P0 治理由后续任务落地，**本文件不实现业务逻辑**。
+ * 渲染层（聊天 / 工具 / 记忆 / 任务 / 设置）**不在本包**：
+ * SoT 是 `apps/web`，其构建产物由 `scripts/copy-assets.mjs` 拷入 `dist/renderer/`。
  *
  * ⚠️ 文件必须是 `.cts`（不是 `.ts`）：tsc 只把 `.cts` 输出为 `.cjs`；而本包
  * `package.json` 是 `type: module`，若编译出 `.js` 会被 Electron 当 ESM 加载
@@ -71,13 +72,18 @@ function buildInfoPayload(): BuildInfoPayload {
 
 function createWindow(): BrowserWindow {
   const win = new BrowserWindow({
-    width: 1180,
-    height: 780,
-    minWidth: 900,
-    minHeight: 600,
+    // 窗口规格（ia-and-interaction.md §1.1）：默认 1280×840，最小可用宽 `--ap-breakpoint-compact` = 1024。
+    width: 1280,
+    height: 840,
+    minWidth: 1024,
+    minHeight: 640,
     show: false,
     title: "AgentPlant",
-    backgroundColor: "#f7f7f8",
+    // 首帧背景：**与 `--ap-surface-0`（`--ap-paper-200`）同值**。这是 Electron 的窗口属性，
+    // 无法在渲染层之前读 CSS 变量，故以字面值给出，并在注释里钉住"与哪个 token 同值"。
+    // `scripts/check-tokens.mjs` 的"禁裸 hex"门禁不含主进程 .cts（它只扫渲染层源码与产物 CSS/HTML/JS），
+    // 靠这条注释保持同步：token 改值时此值必须同步改。
+    backgroundColor: "#F5EFE4",
     webPreferences: {
       preload: PRELOAD,
       contextIsolation: true,

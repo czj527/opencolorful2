@@ -163,7 +163,7 @@
 | F-12 | 完全退出（记录 PID）→ 重开 → 走 AT-403 | PID 变化且数据仍在 | PID 未变（FG-04）/数据丢失 |
 | F-13 | 走 AT-501…AT-506（内核 + P0 治理五项） | 五条判据全成立 + 审计事件存在 | 任一条失败（治理升格为阻塞） |
 | F-14 | 一键命令（文档声明的唯一入口，AT-102） | exit 0 并生成 `evidence/` 日志 | 非 0 / 需手工干预 |
-| F-15 | 文档节制检查：`README` + `AGENTS.md` + `design.md` + `docs/decisions/t1..t7` 齐备 | 全部存在且与实现一致 | 缺失或与实现不符 |
+| F-15 | 文档节制检查：`README` + `AGENTS.md` + `design.md` + `docs/decisions/t1..t7` 齐备（澄清：t6 产出即根 `design.md` v1.0.0 本身 + `AGENTS.md` 指针，不另设 `t6-*.md`，故 F-15 对 t6 只查根 `design.md` 与指针存在） | 全部存在且与实现一致 | 缺失或与实现不符 |
 | F-16 | 汇总 verdict：P1–P5 齐备 + 全链路 pass → `pass`，否则 `blocked` | 验收报告落 `dist/release/<version>/evidence/REPORT.md` | 不允许"有保留的 pass" |
 
 ## 5. 与 CI 的关系（不重复）
