@@ -8,11 +8,24 @@
 /** SQLite 为唯一运行时状态存储（t2 §2-4）；DB 文件 `.sqlite` 永不进仓。 */
 export const STATE_DB_FILENAME = "agentplant.sqlite";
 
-/** 初始 schema 迁移版本；**升级需用户显式同意**（t3 §2）。 */
-export const SCHEMA_VERSION = 1;
+/**
+ * 当前 schema 迁移版本（必须等于 `MIGRATIONS` 末版）；**升级需用户显式同意**（t3 §2）。
+ *
+ * v1 = 初始建表；v2 = `sessions` 终态（`archived`）禁回退触发器（t4 §4）。
+ */
+export const SCHEMA_VERSION = 2;
 
 /** 会话状态（t4 §4 DDL：`sessions.status CHECK (active|archived)`）。 */
 export type SessionStatus = "active" | "archived";
+
+/**
+ * 会话状态词表的**运行时**副本（治理内核判"未知值"用）；
+ * 必须与 `SessionStatus` 及 DDL 的 CHECK 三者一致。
+ */
+export const SESSION_STATUSES = ["active", "archived"] as const;
+
+/** 消息角色（t4 §4 DDL：`messages.role CHECK (system|user|assistant|tool)`）。 */
+export type MessageRole = "system" | "user" | "assistant" | "tool";
 
 /**
  * 任务状态（t4 §7 M2 落 `tasks` 表；此处为跨包共享词汇，M1 不建表）。

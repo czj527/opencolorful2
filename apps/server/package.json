@@ -1,0 +1,28 @@
+{
+  "name": "@agentplant/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "M1-2: 单进程 HTTP+SSE 运行内核骨架（路由 / 单机 token 认证 / SSE 推送 / run 注册表；内存实现，后续接 packages/state）",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@agentplant/agent-core": "workspace:*",
+    "@agentplant/protocol": "workspace:*",
+    "@agentplant/state": "workspace:*"
+  }
+}

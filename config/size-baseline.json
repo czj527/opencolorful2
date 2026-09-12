@@ -18,11 +18,19 @@
   },
   "entries": {
     "apps/desktop": {
-      "loc": 305,
+      "loc": 244,
+      "lintSuppressions": 0
+    },
+    "apps/server": {
+      "loc": 8307,
+      "lintSuppressions": 0
+    },
+    "apps/web": {
+      "loc": 5257,
       "lintSuppressions": 0
     },
     "packages/agent-core": {
-      "loc": 78,
+      "loc": 641,
       "lintSuppressions": 0
     },
     "packages/gateway-protocol": {
@@ -33,12 +41,16 @@
       "loc": 19,
       "lintSuppressions": 0
     },
+    "packages/protocol": {
+      "loc": 1051,
+      "lintSuppressions": 0
+    },
     "packages/state": {
-      "loc": 42,
+      "loc": 1803,
       "lintSuppressions": 0
     },
     "scripts": {
-      "loc": 804,
+      "loc": 1257,
       "lintSuppressions": 3
     }
   }

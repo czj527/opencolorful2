@@ -1,0 +1,17 @@
+{
+  "_comment": "测试 tsconfig 只做 --noEmit 类型检查。模块口径取 NodeNext（与 packages/*/tsconfig.test.json 同）：测试文件用 `./x.js` 后缀相对导入源码，NodeNext 能解析到 .ts。测试可运行期 import @agentplant/protocol 的 validate()（Node 下 workspace 链接可解析），用来断言前端契约与协议层不漂移。",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "composite": false
+  },
+  "include": ["src/**/*.ts"]
+}

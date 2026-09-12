@@ -11,10 +11,11 @@
   "packageManager": "pnpm@11.8.0",
   "scripts": {
     "dev": "pnpm -r --if-present run dev",
-    "build": "pnpm --filter @agentplant/gateway-protocol run build && pnpm --filter @agentplant/plugin-sdk run build && pnpm --filter @agentplant/state run build && pnpm --filter @agentplant/agent-core run build && pnpm --filter @agentplant/desktop run build",
+    "build": "pnpm --filter @agentplant/protocol run build && pnpm --filter @agentplant/gateway-protocol run build && pnpm --filter @agentplant/plugin-sdk run build && pnpm --filter @agentplant/state run build && pnpm --filter @agentplant/agent-core run build && pnpm --filter @agentplant/server run build && pnpm --filter @agentplant/web run build && pnpm --filter @agentplant/desktop run build",
     "lint": "eslint .",
     "typecheck": "pnpm -r --if-present run typecheck",
     "test": "vitest run --passWithNoTests",
+    "check:tokens": "node scripts/check-tokens.mjs",
     "check:ratchet": "node scripts/check-ratchet.mjs",
     "verify:release": "node scripts/verify-release.mjs",
     "version:sync": "node scripts/sync-version.mjs",

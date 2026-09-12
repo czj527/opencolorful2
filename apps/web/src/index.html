@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="color-scheme" content="light dark" />
+    <!--
+      严格 CSP（本地优先，t2）；`connect-src` 只放开本地 server：
+      渲染层唯一的网络出口是 `http://127.0.0.1:43121`（apps/server 默认 PORT=43121），
+      `ws://127.0.0.1:43121` 为二期预留（M1 用 fetch + ReadableStream 读 SSE，不建 WebSocket）。
+      其余项保持最严：无远程脚本/样式/字体/frame，`object-src 'none'`，`base-uri 'none'`。
+      style-src 的 'unsafe-inline' 仅用于运行时写 CSS 自定义属性（如 ambient-hour-tint）。
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; font-src 'self' file:; connect-src http://127.0.0.1:43121 ws://127.0.0.1:43121; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>AgentPlant</title>
+    <link rel="stylesheet" href="./styles/tokens.css" />
+    <link rel="stylesheet" href="./styles/app.css" />
+    <!--
+      防 FOUC（tokens.md §7.4）：样式表之后、`#app` 之前声明，是首个 module script，
+      故在 DOM 首次绘制前执行——把 localStorage 偏好 + 系统偏好解析成 data-theme/data-motion。
+      外部文件而非内联：构造期即可被 CSP 的 `script-src 'self'` 覆盖，无需 'unsafe-inline'。
+    -->
+    <script type="module" src="./styles/theme-init.js"></script>
+  </head>
+  <body>
+    <div id="app" class="ap-app" aria-busy="true"></div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

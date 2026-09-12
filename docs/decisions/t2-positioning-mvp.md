@@ -1,8 +1,9 @@
 # t2 产品定位与 MVP 边界（用户已拍板，captain 当面核实 2026-09-11）
 
 > 输入：已定方向（私人助理 / 最小本地 / TS 同仓）+ t1 对标结论
-> （`docs/decisions/t1-reference-benchmark.md`）。本稿只做规划，供用户最终拍板；
-> 拍板后 t3 建仓、t4/t5/t6/t7 依此展开。
+> （`docs/decisions/t1-reference-benchmark.md`）。**本稿已拍板生效（2026-09-11）**，
+> 非草案：§5 为用户拍板结果，t3 建仓、t4/t5/t6/t7 均依此展开；后续修订按 t6 文档治理
+> （`design.md` §5）走，不另起并列稿。
 
 ## 1. 产品定位
 

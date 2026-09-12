@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "M1: agent 主循环 + 最小工具集 + 记忆的纯净内核（禁 import apps/*）",
+  "description": "M1: agent 主循环 + 最小工具集 + 记忆的纯净内核 + 完成判定/审计元数据（禁 import apps/*）",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -20,6 +20,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@agentplant/state": "workspace:*"
+    "@agentplant/protocol": "workspace:*"
   }
 }

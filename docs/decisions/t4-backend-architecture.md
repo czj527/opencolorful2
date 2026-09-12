@@ -4,7 +4,7 @@
 > （`docs/decisions/t2-positioning-mvp.md`，用户已拍板 2026-09-11）+ 三份子 agent
 > 实读源码报告（openclaw 后端解剖 / SQLite 状态内核 / 工具运行时与 API）。
 > 本稿只做规划：架构决策 + 模块划分 + 接口边界 + M2 扩展位 + 落地分派清单。
-> 待 t6 建立 `design.md` 基线后，本稿并入其"架构"部分。
+> **已并入 `design.md` §2 架构**（t6 基线落定 2026-09-11）；本稿保留为决策留痕。
 
 ## 0. 决策摘要（一页）
 
@@ -219,4 +219,5 @@ export interface Tool<P extends TSchema = TSchema, D = unknown> {
 7. 联调：t7 点击链路（聊天→工具→记忆→重启不丢）+ P0 治理演示三项。
 
 ---
-* predates 说明：`design.md` 尚由 t6 建立；本稿先落 `docs/decisions/`，t6 基线就绪后并入其架构章节。
+* 已并入本基线：全文实质内容已并入根 `design.md` §2 架构（t6，2026-09-11）；
+  本稿作为决策留痕保留，工程口径以 `design.md` 为准。

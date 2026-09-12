@@ -34,4 +34,24 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    // 浏览器侧文件（渲染层，t21）：`apps/web/src` 的 TS 有 DOM lib，但纯 JS 资产
+    // （如 `styles/theme-init.js`，首帧主题解析）没有 lib 声明来源，必须显式给 globals。
+    // 范围只限渲染层源码目录，不影响 Node 侧包与脚本（那些仍只有 console/process）。
+    files: ["apps/web/src/**/*.{js,mjs}"],
+    languageOptions: {
+      globals: {
+        window: "readonly",
+        document: "readonly",
+        localStorage: "readonly",
+        matchMedia: "readonly",
+        requestAnimationFrame: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
+        queueMicrotask: "readonly",
+      },
+    },
+  },
 );

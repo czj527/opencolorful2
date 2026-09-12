@@ -1,7 +1,14 @@
 name: ci
 
-# 唯一必需的 workflow（t3 §3）：Node 22，顺序 install → lint → typecheck → test
-# → （token 门禁调用位）→ build → ratchet。
+# 唯一必需的 workflow（t3 §3）：Node 22，顺序 install → lint → build
+# → （产物存在性断言）→ typecheck → test → （token 门禁调用位）→ version check
+# → ratchet → verify-release 自检。
+# build 必须先于 typecheck 与 test（t3 §3 修订）：各包 package.json 的
+# main/exports/types 指向 ./dist/index.js|.d.ts，而 dist/ 被 .gitignore 排除；干净检出
+# （无 dist）时跨包 import（类型解析同样走 types）失败 → typecheck 与 test 必红。
+# 仓内 tsconfig 均未设 noEmitOnError，故 build 即使有类型错误也会 emit 出 dist
+# （build 自身 exit 非 0 照红 CI，语义正确），typecheck 随后在 dist 齐备下做真检查。
+# 本地"test 先过"多为 dist 残留造成的假象，不代表干净检出可通过。
 # 只跑"源码上的确定性门禁"；真实发布产物的端到端验收归 t7 本地流程（t7 §5）。
 
 on:
@@ -41,27 +48,17 @@ jobs:
       - name: lint
         run: pnpm lint
 
-      - name: typecheck
-        run: pnpm typecheck
-
-      - name: test
-        run: pnpm test
-
-      # t5 门禁调用位（预留，t3 §6-5）：scripts/check-tokens.mjs 本体由 t5 落地
-      # （解析 token 源文件复核对比度 + 引用完整性，与 pnpm test 同级门禁）。
-      # 脚本存在即在本顺序位成为硬门禁；尚未落地时显式 PENDING，**不静默通过**。
-      - name: check:tokens（t5 预留调用位）
-        run: |
-          if [ -f scripts/check-tokens.mjs ]; then
-            node scripts/check-tokens.mjs
-          else
-            echo "::warning title=token 门禁 PENDING::scripts/check-tokens.mjs 尚未落地（owner: t5）——本步骤当前不构成门禁（t3 §6-5）"
-          fi
-
+      # build 必须先于 typecheck 与 test（t3 §3 修订）：包入口与类型入口指向
+      # ./dist/index.js|.d.ts 而 dist/ 不进仓，干净检出无 dist 时跨包 import（类型解析
+      # 同样走 types → ./dist/index.d.ts）失败 → typecheck 与 test 必红（t3 级 CI 风险）。
+      # 仓内 tsconfig 均未设 noEmitOnError，故 build 即使有类型错误也会 emit 出 dist
+      # （build 自身 exit 非 0 照红 CI，语义正确），typecheck 随后在 dist 齐备下做真检查。
       - name: build
         run: pnpm build
 
       # 反假绿（t7 FG-01/FG-02）：构建必须真的产出可运行文件，而不是"dev server 能跑"。
+      # apps/web 是渲染层唯一真相源（t21）；apps/desktop 的 renderer 产物复用其构建输出，
+      # 故两者都要断言：web 产物缺失 → desktop 只是"打不开的壳"。
       - name: build artifacts（产物存在性断言）
         run: |
           for artifact in \
@@ -69,6 +66,10 @@ jobs:
             packages/state/dist/index.js \
             packages/gateway-protocol/dist/index.js \
             packages/plugin-sdk/dist/index.js \
+            apps/web/dist/index.html \
+            apps/web/dist/main.js \
+            apps/web/dist/styles/tokens.css \
+            apps/web/dist/styles/app.css \
             apps/desktop/dist/main/main.cjs \
             apps/desktop/dist/main/preload.cjs \
             apps/desktop/dist/renderer/index.html \
@@ -80,6 +81,26 @@ jobs:
               exit 1
             fi
           done
+
+      # typecheck 在 build + 产物断言之后：跨包类型经 types → ./dist/index.d.ts 解析，
+      # 干净检出必须先构建（t3 §3 修订）。
+      - name: typecheck
+        run: pnpm typecheck
+
+      # test 在 build 之后：包入口指向 dist，干净检出必须先构建（t3 §3 修订）。
+      - name: test
+        run: pnpm test
+
+      # t5 门禁调用位（t3 §6-5）：scripts/check-tokens.mjs 已由 t21 落地
+      # （解析 tokens.md 附录 A 复核：引用完整性 / 禁裸 hex / 对比度 / 明暗双主题）。
+      # 脚本存在即在本顺序位成为硬门禁；尚未落地时显式 PENDING，**不静默通过**。
+      - name: check:tokens（t5 预留调用位）
+        run: |
+          if [ -f scripts/check-tokens.mjs ]; then
+            node scripts/check-tokens.mjs
+          else
+            echo "::warning title=token 门禁 PENDING::scripts/check-tokens.mjs 尚未落地（owner: t5）——本步骤当前不构成门禁（t3 §6-5）"
+          fi
 
       # 版本戳注入机制（t3 §6-6）：根 package.json 为单一版本源，apps/desktop 必须一致。
       - name: version check（版本戳单一来源一致）
@@ -94,7 +115,10 @@ jobs:
         run: |
           node --check scripts/verify-release.mjs
           node --check scripts/check-ratchet.mjs
+          node --check scripts/check-tokens.mjs
           node --check scripts/sync-version.mjs
+          node --check apps/web/scripts/build.mjs
           node --check apps/desktop/scripts/gen-build-info.mjs
+          node --check apps/desktop/scripts/clean.mjs
           node --check apps/desktop/scripts/copy-assets.mjs
           node scripts/verify-release.mjs --self-test

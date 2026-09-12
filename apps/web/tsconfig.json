@@ -1,0 +1,18 @@
+{
+  "_comment": "渲染层为浏览器目标（DOM lib + Bundler 解析，与 apps/desktop/tsconfig.renderer.json 同口径）。产物必须是浏览器可直载的 ESM：模块说明符只允许相对路径 + .js 后缀（由 scripts/build.mjs 守卫），@agentplant/protocol 只以 `import type` 参与类型检查、不出现在运行时代码里。",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": [],
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "composite": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

@@ -14,6 +14,18 @@
 >
 > **状态**：v1.0.0 / 2026-09-11 / 规划稿。所有取值已冻结，**不含任何"待定"项**。
 > 全部色彩对比度已逐项实测（见 §2.4 与附录 A），明暗双主题 109 项检查全部达标。
+>
+> **t21 治理变更记录（方案B 落地，逐条可在本文件内 grep 到）**：改动只落在
+> ① §2.2 accent 表三档实心（主按钮底/悬停/按下）改为**中性墨色**（明 `ink-800/700/600`、暗 `mist-50/100/200`，
+> 零新增 hex；`accent-text/-subtle/-on` 与 `border-focus` 保持品牌青蓝）；
+> ② §5.3 新增 **同心圆角公式** `--ap-radius-inset`（语义别名，值由既有 token 用 `calc()` 导出）；
+> ③ §5.5 `--ap-focus-ring-width` `2px → 3px`，`--ap-shadow-glow` 改为同色系**浅底衬垫**
+> （外环仍为实色 `--ap-border-focus`，继续承担 §0.4 的 ≥3:1 非文本对比度契约，故对比度判定不变）。
+> 三层模型、命名规范、§0.3 守门表、五条原则、presence 五态结构**均未改动**；
+> 附录 A 的组 B/D/E 对应行与附录 A 组 I 的实测数字已同步；§6.1 时长（`fast 140 / base 200ms`）
+> 按"可选"处理，**本次未改**（避免与 §6.3 过渡表、§12.4 变更日志产生连锁改动）。
+> 另：附录 A 组 I 的人工统计（262 / 92 / 170）经 `scripts/check-tokens.mjs` 实测校正为
+> **263 / 80 / 183**（含方案B 新增的 1 个 token），详见组 I 的"口径说明"。
 
 ---
 
@@ -268,7 +280,7 @@
 | `--ap-border-default` | `#D8CFBE` | `#2F3F4A` | 控件描边、卡片描边 |
 | `--ap-border-strong` | `#B4A68C` | `#4E5F6C` | 悬停描边、强调分隔 |
 | `--ap-border-accent` | `#45708A` | `#6FA0BC` | 选中/激活描边 |
-| `--ap-border-focus` | `#45708A` | `#6FA0BC` | focus ring 颜色（2px + 2px offset） |
+| `--ap-border-focus` | `#45708A` | `#6FA0BC` | focus ring 颜色（**外环**，宽度 `--ap-focus-ring-width` = 3px + `--ap-focus-ring-offset` = 2px；浅底由 `--ap-shadow-glow` 承担） |
 | `--ap-border-success` | `#B9CFB4` | `#33513C` | 成功态卡片描边 |
 | `--ap-border-warning` | `#E0C89A` | `#5C4A22` | 警告条描边 |
 | `--ap-border-danger` | `#E0B3A8` | `#5C332E` | 错误条描边、超限提示 |
@@ -278,12 +290,21 @@
 
 | Token | 明 | 暗 | 用途 |
 |---|---|---|---|
-| `--ap-accent` | `#45708A` | `#6FA0BC` | 主按钮底、选中指示条 |
-| `--ap-accent-hover` | `#3F6179` | `#9FC3D6` | 主按钮悬停 |
-| `--ap-accent-active` | `#2F4E60` | `#D3E3EC` | 主按钮按下 |
-| `--ap-accent-text` | `#3F6179` | `#9FC3D6` | 可点击文字、链接 |
-| `--ap-accent-subtle` | `#E7F0F5` | `#26343D` | 选中行浅底、标签浅底 |
-| `--ap-accent-on` | `#FFFDF8` | `#101B22` | 实心强调色上的文字（与 `text-on-accent` 同值，语义独立保留） |
+| `--ap-accent` | `#2A2622` | `#E9EFF3` | 主按钮底（**中性墨色实心**，非品牌色填充；品牌青蓝只用于文字/描边/focus） |
+| `--ap-accent-hover` | `#4A433C` | `#C3D1DA` | 主按钮悬停（明向更暗、暗向更亮）+ 选中指示条 |
+| `--ap-accent-active` | `#61584C` | `#A9BAC5` | 主按钮按下 |
+| `--ap-accent-text` | `#3F6179` | `#9FC3D6` | 可点击文字、链接（**保留品牌青蓝**） |
+| `--ap-accent-subtle` | `#E7F0F5` | `#26343D` | 选中行浅底、标签浅底（**保留**） |
+| `--ap-accent-on` | `#FFFDF8` | `#101B22` | 中性墨色实心上的文字（与 `text-on-accent` 同值，语义独立保留） |
+
+> **主按钮改中性墨色的取舍（方案B，t5 §7【终版】+ `kimi-style-reference` §5.3-B）**：
+> 三档实心不再引用 `seal-*`，改为**逐主题镜像 `text-primary` 的中性档位**（明 `ink-800/700/600`、
+> 暗 `mist-50/100/200`）——不新增任何 hex，L1 档位零增减。理由：参考实现的"主操作"按钮用
+> 中性墨色（`rgba(0,0,0,.9)`），品牌色只出现在链接/选中/focus，克制用色由此再收一档（P2）。
+> 因"实心↔其上的文字"永远整对切换，`accent-on` / `text-on-accent` 无需改值：
+> 明为 `paper-50`（最差 6.87:1，落 `accent-active`），暗为 `night-950`（最差 8.75:1，落 `accent-active`）。
+> 选中指示条上移到 `accent-hover`（原 `accent` 位）——选中态色相不变（仍是中性墨色同族）。
+> `accent-text/-subtle/-border-accent/-border-focus` **全部保留品牌青蓝 `seal`**（链接、选中、focus 未受影响）。
 
 ### 2.3 语义状态色 success / warning / danger / info
 
@@ -587,6 +608,7 @@ UI 元素 20/14 ≈ 1.43 便于垂直居中；代码 22/13 ≈ 1.69 便于 CJK �
 | `--ap-radius-card` | `var(--ap-radius-lg)` | 语义别名：卡片 |
 | `--ap-radius-bubble` | `var(--ap-radius-xl)` | 语义别名：消息气泡 |
 | `--ap-radius-tool-card` | `8px` | 语义别名：工具卡（比普通卡更紧凑） |
+| `--ap-radius-inset` | `calc(外层圆角 − 内边距 − 发丝线宽)` | 语义别名：**同心圆角**——卡内嵌套块（工具参数块 L4、确认区、内嵌代码块）；`外层`取该块所在卡片的圆角 token，`发丝线`取 `--ap-border-w` |
 | `--ap-radius-modal` | `var(--ap-radius-xl)` | 语义别名：模态 |
 | `--ap-radius-pill` | `var(--ap-radius-full)` | 语义别名：胶囊 |
 
@@ -595,6 +617,14 @@ UI 元素 20/14 ≈ 1.43 便于垂直居中；代码 22/13 ≈ 1.69 便于 CJK �
 openhanako 的立场是"controls are seals, 方"（控件 2~3px），
 我们保留其精确感但整体上调一档，因为陪伴感需要一点柔度；
 **但绝不使用 24px+ 的"圆滚滚"圆角**——那是二次元化的第一信号。
+
+**同心圆角公式（方案B 新增，t5 §7【终版】+ `kimi-style-reference` §5.3-B）**：
+`--ap-radius-inset` 用 `calc()` 表达"内圆角 = 外圆角 − 内边距 − 发丝线宽"，
+只在**卡片内再套一层可辨识块**（工具参数块 L4、就地确认区、内嵌代码块）时使用；
+外层圆角、内边距、发丝线一律取既有 token（`--ap-radius-*` / `--ap-space-*` / `--ap-border-w`），
+故本行是**语义别名**而非新数值——加内衬块不必新增圆角档位，也不会出现"内外圆心不同心"的视觉歪斜。
+实现写法（`var()` 不能作 `calc()` 的被减数，需显式展开）：
+`border-radius: calc(var(--ap-radius-tool-card) - var(--ap-space-12) - var(--ap-border-w))`。
 
 ### 5.4 阴影
 
@@ -607,7 +637,7 @@ openhanako 的立场是"controls are seals, 方"（控件 2~3px），
 | `--ap-shadow-lg` | `0 12px 32px rgb(42 38 34 / 0.10), 0 2px 8px rgb(42 38 34 / 0.06)` | `0 12px 32px rgb(0 0 0 / 0.55), 0 2px 8px rgb(0 0 0 / 0.38)` | 侧拉面板 |
 | `--ap-shadow-pop` | `0 20px 48px rgb(42 38 34 / 0.16), 0 4px 12px rgb(42 38 34 / 0.08)` | `0 20px 48px rgb(0 0 0 / 0.62), 0 4px 12px rgb(0 0 0 / 0.40)` | 模态 |
 | `--ap-shadow-inset-hairline` | `inset 0 1px 0 rgb(255 255 255 / 0.60)` | `inset 0 1px 0 rgb(233 239 243 / 0.06)` | 浮起面板顶部内高光 |
-| `--ap-shadow-glow` | `0 0 0 4px rgb(69 112 138 / 0.12)` | `0 0 0 4px rgb(111 160 188 / 0.20)` | focus 光晕 |
+| `--ap-shadow-glow` | `0 0 0 3px rgb(42 38 34 / 0.14)` | `0 0 0 3px rgb(233 239 243 / 0.16)` | focus 浅底光晕（与 `--ap-border-focus` 外环成对出现：**外环承担 ≥3:1 对比，本项只做浅底衬垫**，两者缺一不可） |
 | `--ap-shadow-ambient` | `0 0 60px 20px rgb(42 38 34 / 0.04)` | `0 0 80px 24px rgb(0 0 0 / 0.28)` | 环境光晕（配 `--ap-ambient-*`） |
 
 **设计依据**：阴影一律使用**暖墨色**（`rgb(42 38 34)`）而非纯黑——
@@ -623,8 +653,14 @@ openhanako 的立场是"controls are seals, 方"（控件 2~3px），
 | `--ap-border-w` | `1px` | 默认描边 |
 | `--ap-border-w-strong` | `2px` | 激活描边 |
 | `--ap-border-w-rail` | `3px` | 选中行左侧指示条 |
-| `--ap-focus-ring-width` | `2px` | focus ring 宽度 |
+| `--ap-focus-ring-width` | `3px` | focus ring 宽度（方案B：2px → 3px；外环 `--ap-border-focus` + 浅底 `--ap-shadow-glow` 成对使用） |
 | `--ap-focus-ring-offset` | `2px` | focus ring 偏移 |
+
+> **focus ring 改 3px + 浅底（方案B，t5 §7【终版】+ `kimi-style-reference` §5.3-B）**：
+> 宽度 3px，**颜色仍取实色 `--ap-border-focus`**（品牌青蓝）——它是本组件唯一承担
+> `§0.4` 非文本对比度 ≥3:1 契约的载体；`--ap-shadow-glow` 退化为同色系浅底衬垫
+> （明 14% 暖墨 / 暗 16% 冷雾），只负责"看起来更厚"，**不承担对比度**。
+> 因此附录 A 组 B（`--ap-accent` 实心）与 §0.4 的阈值判定**不发生任何重算**。
 
 | z-index Token | 值 | 层 |
 |---|---|---|
@@ -854,6 +890,7 @@ openhanako 的立场是"controls are seals, 方"（控件 2~3px），
 | `--ap-space-{0,2,4,6,8,12,16,20,24,32,40,48,64,80}` | `--spacing-ap-{n}` | `p-ap-16` / `m-ap-8` / `gap-ap-12` |
 | `--ap-radius-{none,xs,sm,md,lg,xl,2xl,full}` | `--radius-ap-{k}` | `rounded-ap-md` |
 | `--ap-radius-{control,card,bubble,tool-card,modal,pill}` | `--radius-ap-{k}` | `rounded-ap-card` / `rounded-ap-bubble` |
+| `--ap-radius-inset`（同心圆角，值含 `calc()`） | `--radius-ap-inset` | `rounded-ap-inset`（嵌套块） |
 | `--ap-shadow-{none,xs,sm,md,lg,pop}` | `--shadow-ap-{k}` | `shadow-ap-md` |
 | `--ap-shadow-{glow,ambient,inset-hairline}` | `--shadow-ap-{k}` | `shadow-ap-glow` |
 | `--ap-ease-{standard,enter,exit,emphasized,breathe,settle}` | `--ease-ap-{k}` | `ease-ap-enter` |
@@ -1000,9 +1037,10 @@ Tailwind `--animate-ap-*` 需要的 5 个关键帧（名字即契约，全部定
   --ap-border-info: #AECBDA;
 
   /* ─── L2 强调 accent ─────────────────────────────────────────────── */
-  --ap-accent: var(--ap-seal-500);
-  --ap-accent-hover: var(--ap-seal-600);
-  --ap-accent-active: var(--ap-seal-700);
+  /* 实心三档 = 中性墨色（方案B；镜像 text-primary 的中性档位，品牌青蓝只留文字/描边/focus） */
+  --ap-accent: var(--ap-ink-800);
+  --ap-accent-hover: var(--ap-ink-700);
+  --ap-accent-active: var(--ap-ink-600);
   --ap-accent-text: var(--ap-seal-600);
   --ap-accent-subtle: var(--ap-seal-100);
   --ap-accent-on: var(--ap-paper-50);
@@ -1135,6 +1173,8 @@ Tailwind `--animate-ap-*` 需要的 5 个关键帧（名字即契约，全部定
   --ap-radius-card: var(--ap-radius-lg);
   --ap-radius-bubble: var(--ap-radius-xl);
   --ap-radius-tool-card: 8px;
+  /* 同心圆角：内层 = 外层 − 内边距 − 发丝线（var() 不能作被减数，故在组件侧显式展开） */
+  --ap-radius-inset: calc(var(--ap-radius-lg) - var(--ap-space-12) - var(--ap-border-w));
   --ap-radius-modal: var(--ap-radius-xl);
   --ap-radius-pill: var(--ap-radius-full);
 
@@ -1146,7 +1186,7 @@ Tailwind `--animate-ap-*` 需要的 5 个关键帧（名字即契约，全部定
   --ap-shadow-lg: 0 12px 32px rgb(42 38 34 / 0.10), 0 2px 8px rgb(42 38 34 / 0.06);
   --ap-shadow-pop: 0 20px 48px rgb(42 38 34 / 0.16), 0 4px 12px rgb(42 38 34 / 0.08);
   --ap-shadow-inset-hairline: inset 0 1px 0 rgb(255 255 255 / 0.60);
-  --ap-shadow-glow: 0 0 0 4px rgb(69 112 138 / 0.12);
+  --ap-shadow-glow: 0 0 0 3px rgb(42 38 34 / 0.14);
   --ap-shadow-ambient: 0 0 60px 20px rgb(42 38 34 / 0.04);
 
   /* ─── L3 边框宽度 / 聚焦环 ───────────────────────────────────────── */
@@ -1154,7 +1194,7 @@ Tailwind `--animate-ap-*` 需要的 5 个关键帧（名字即契约，全部定
   --ap-border-w: 1px;
   --ap-border-w-strong: 2px;
   --ap-border-w-rail: 3px;
-  --ap-focus-ring-width: 2px;
+  --ap-focus-ring-width: 3px;
   --ap-focus-ring-offset: 2px;
 
   /* ─── L3 z-index ─────────────────────────────────────────────────── */
@@ -1241,10 +1281,10 @@ Tailwind `--animate-ap-*` 需要的 5 个关键帧（名字即契约，全部定
   --ap-border-danger: #5C332E;
   --ap-border-info: #2E4A58;
 
-  /* 强调 */
-  --ap-accent: var(--ap-seal-400);
-  --ap-accent-hover: var(--ap-seal-300);
-  --ap-accent-active: var(--ap-seal-200);
+  /* 强调（方案B：实心三档 = 中性墨色，镜像 text-primary 的暗色档位；文字/浅底保留品牌青蓝） */
+  --ap-accent: var(--ap-mist-50);
+  --ap-accent-hover: var(--ap-mist-100);
+  --ap-accent-active: var(--ap-mist-200);
   --ap-accent-text: var(--ap-seal-300);
   --ap-accent-subtle: #26343D;
   --ap-accent-on: var(--ap-night-950);
@@ -1307,7 +1347,7 @@ Tailwind `--animate-ap-*` 需要的 5 个关键帧（名字即契约，全部定
   --ap-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55), 0 2px 8px rgb(0 0 0 / 0.38);
   --ap-shadow-pop: 0 20px 48px rgb(0 0 0 / 0.62), 0 4px 12px rgb(0 0 0 / 0.40);
   --ap-shadow-inset-hairline: inset 0 1px 0 rgb(233 239 243 / 0.06);
-  --ap-shadow-glow: 0 0 0 4px rgb(111 160 188 / 0.20);
+  --ap-shadow-glow: 0 0 0 3px rgb(233 239 243 / 0.16);
   --ap-shadow-ambient: 0 0 80px 24px rgb(0 0 0 / 0.28);
 }
 
@@ -1524,6 +1564,7 @@ Tailwind `--animate-ap-*` 需要的 5 个关键帧（名字即契约，全部定
   --radius-ap-card: var(--ap-radius-card);
   --radius-ap-bubble: var(--ap-radius-bubble);
   --radius-ap-tool-card: var(--ap-radius-tool-card);
+  --radius-ap-inset: var(--ap-radius-inset);
   --radius-ap-modal: var(--ap-radius-modal);
 
   /* 阴影 */
@@ -1823,6 +1864,9 @@ export function mountColorScheme(): () => void {
 | `--ap-danger`（实心） | 6.59 | ✅ |
 | `--ap-success`（实心） | 4.85 | ✅ |
 
+> `--ap-accent`（实心）现值 = 中性墨色 `#2A2622`（方案B）：× 9 表面最差 **11.68**（落 `row-selected`），
+> 较原 seal 值更强，仍 ✅。其余项不受方案B 影响。
+
 ### 组 C：深色文字 × 9 表面（目标 ≥4.5:1）
 
 | Token | 最差值 | 判定 |
@@ -1860,21 +1904,28 @@ export function mountColorScheme(): () => void {
 | `--ap-danger`（实心） | **3.59**（余量最小项） | ✅ |
 | `--ap-success`（实心） | 5.22 | ✅ |
 
+> `--ap-accent`（实心）现值 = 中性墨色 `#E9EFF3`（方案B）：× 9 表面最差 **9.83**（落 `row-selected`），
+> 较原 seal 值更强，仍 ✅。其余项不受方案B 影响。
+
 ### 组 E：填充色 / 反白文字（目标 ≥4.5:1）
 
 | 组合 | 实测 | 判定 |
 |---|---|---|
-| 浅色 `text-on-accent` `#FFFDF8` / `accent` `#45708A` | **5.25** | ✅ |
-| 浅色 / `accent-hover` `#3F6179` | 6.46 | ✅ |
-| 浅色 / `accent-active` `#2F4E60` | 8.68 | ✅ |
+| 浅色 `text-on-accent` `#FFFDF8` / `accent` `#2A2622`（中性墨色） | **14.77** | ✅ |
+| 浅色 / `accent-hover` `#4A433C` | 9.57 | ✅ |
+| 浅色 / `accent-active` `#61584C` | 6.87（**本组浅色最差**） | ✅ |
 | 浅色 / `danger` `#8B2C1F` | 8.34 | ✅ |
 | 浅色 / `danger-hover` `#6E2117` | 10.91 | ✅ |
 | 浅色 / `success` `#3A6B45` | 6.13 | ✅ |
-| 深色 `text-on-accent` `#101B22` / `accent` `#6FA0BC` | 6.18 | ✅ |
-| 深色 / `accent-hover` `#9FC3D6` | 9.36 | ✅ |
-| 深色 / `accent-active` `#D3E3EC` | 13.29 | ✅ |
+| 深色 `text-on-accent` `#101B22` / `accent` `#E9EFF3`（中性墨色） | **15.06** | ✅ |
+| 深色 / `accent-hover` `#C3D1DA` | 11.19 | ✅ |
+| 深色 / `accent-active` `#A9BAC5` | 8.75（**本组深色最差**） | ✅ |
 | 深色 / `danger` `#D9736A` | 5.50 | ✅ |
 | 深色 / `success` `#7FBE84` | 7.99 | ✅ |
+
+> **方案B 后的本组口径**：accent 三档改为中性墨色，判定改为"实心 ↔ 其上的反白文字"**整对**取值
+> （浅色最差 6.87、深色最差 8.75，均 ≥4.5:1）；深色 `accent` 档已改用 `night-950` 反白字，
+> 与不可见的组合（深字压深底）不作数。`danger` / `success` 不受方案B 影响，原值保留。
 
 ### 组 F：语义 text-on-bg 与状态底色（目标 ≥4.5:1，22 项）
 
@@ -1934,8 +1985,9 @@ export function mountColorScheme(): () => void {
 
 ### 组 H：CSS 变量引用完整性（已实测）
 
-方法：从 §7.2 的 `tokens.css` 代码块（505 行）提取全部 `--ap-*` 定义名与 `var(--ap-*)` 引用名，
+方法：从 §7.2 的 `tokens.css` 代码块提取全部 `--ap-*` 定义名与 `var(--ap-*)` 引用名，
 分别做集合比对；再与全文（含所有表格与内联码）出现的 token 名交叉比对。
+**该比对已脚本化**（`scripts/check-tokens.mjs`，t21 落地）：`tokens.css` 与下列数字不一致即 CI 红。
 
 | 检查项 | 实测结果 |
 |---|---|
@@ -1953,14 +2005,22 @@ export function mountColorScheme(): () => void {
 | 类别 | 数量 | 判定规则 |
 |---|---|---|
 | L1 原始色板 token | **57** | `^--ap-{hue}-{step}$`，hue ∈ 11 个保留色相名 |
-| L2 语义 token | **81** | 非 L1/L3；前缀 ∈ `surface/text/border/accent/success/warning/danger/info/presence/ambient/emotion` |
-| L3 结构 token | **124** | 前缀 ∈ `fs/lh/fw/tracking/space/size/breakpoint/radius/shadow/border-w/focus-ring/z/opacity/duration/ease/motion/font` |
-| **定义总数（去重）** | **262** | 出现在 §7.2 代码块中的全部 `--ap-*` 定义 |
-| 其中暗色块覆盖项 | **92** | `[data-theme='dark']` 内的定义数（0 个为暗色专有） |
-| 主题无关项（仅定义在 `:root`） | **170** | 结构性 token 与 L1 色板，不应随主题变化 |
+| L2 语义 token | **84** | 前缀 ∈ `surface/text/border/accent/success/warning/danger/info/presence/ambient/emotion`（含 4 个语义描边 `border-{accent,focus,success,warning,danger,info}` 中的语义族命名） |
+| L3 结构 token | **120** | 前缀 ∈ `fs/lh/fw/tracking/space/size/breakpoint/radius/shadow/z/opacity/duration/ease/motion/font` |
+| 焦点环结构 token | **2** | `--ap-focus-ring-width` / `--ap-focus-ring-offset`（§5.5，L3 结构层的独立命名族） |
+| **合计（去重）** | **263** | 等于 §7.2 中 `:root` 块的**定义行**数 |
+| 其中暗色块覆盖项 | **80** | `[data-theme='dark']` 内的定义行数（**0 个为暗色专有**：暗块只覆盖 L2 与主题相关 L3） |
+| 主题无关项（仅定义在 `:root`） | **183** | 263 − 80：结构性 token 与 L1 色板，不随主题变化 |
 
-> **为何 262 个不算多**：L1（57）+ L3（124）合计 181 个是"结构资产"，
-> 与具体功能无关；真正表达产品语义的 L2 只有 **81** 个，构成如下（实测）：
+> **口径说明（t21 校正）**：本表数字由 `scripts/check-tokens.mjs` 每次运行时重算并回报
+> （`明块定义 263 / 暗块定义 80`），与 `tokens.css` 不一致即 CI 红。
+> 此前记的 `262 / 92 / 170` 为人工统计且与实际定义行不符，已按实测更正；
+> 合计由 262 → 263 是方案B 新增 `--ap-radius-inset` 所致（§5.3，同心圆角公式）。
+> 另有 24 个语义描边 token 同时匹配 `border-*`（L2 语义前缀）与 `border-w-*`（L3 结构前缀）两种读法，
+> 本表按"语义前缀优先"归类，故 `border-*` 命名族在两级之间没有唯一归属——**判定以本表口径为准**。
+
+> **为何 263 个不算多**：L1（57）+ L3（120 + 2）合计 179 个是"结构资产"，
+> 与具体功能无关；真正表达产品语义的 L2 只有 **84** 个，构成如下（实测）：
 >
 > | L2 子类 | 数量 | 说明 |
 > |---|---|---|
